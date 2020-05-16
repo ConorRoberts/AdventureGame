@@ -34,18 +34,14 @@ public class Game{
 
         Adventure myAdventure = theGame.generateAdventure(adventure);
 
-        System.out.println(myAdventure.listAllRooms());
-
-        JSONArray rooms= (JSONArray) adventure.get("room");
-
-        for (Object r : rooms){ /*Prints rooms*/
+        /*for (Object r : rooms){
             JSONObject current = (JSONObject) r;
             String temp=(String) current.get("name");
             System.out.println(temp);
-        }
+        }*/
 
-        /* TESTING 
-        Parse json 
+        /* TESTING
+        Parse json
         Store rooms in arraylist using methods
         Print all rooms and some given properties
         */
@@ -89,16 +85,14 @@ public class Game{
         }
 
         return null;
- 
+
     }
 
     public Adventure generateAdventure(JSONObject obj) {
         Adventure adventure = new Adventure();
 
-        JSONObject jsonRoom = (JSONObject) obj.get("room");
-        JSONObject jsonItem = (JSONObject) obj.get("item");
-        adventure.addRoom();
-
+        JSONArray jsonRoom = (JSONArray) obj.get("room");
+        JSONArray jsonItem = (JSONArray) obj.get("item");
 
         return adventure;
     }

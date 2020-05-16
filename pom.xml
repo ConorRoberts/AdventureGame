@@ -50,7 +50,7 @@ execute: mvn exec:java
                 </executions>
 
                 <configuration> <!--tell the plugin which class to run -->
-                    <mainClass>adventure.HelloWorld</mainClass> 
+                    <mainClass>adventure.Game</mainClass> 
                 </configuration>
 
             </plugin>
