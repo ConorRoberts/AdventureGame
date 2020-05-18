@@ -9,10 +9,24 @@ public class Room {
     private String roomShortDescription;
     private String roomID;
     private ArrayList<Item> items = new ArrayList<Item>();
-    private ArrayList<Room> connectedRooms = new ArrayList<Room>();
+    private Room connectedN;
+    private Room connectedE;
+    private Room connectedS;
+    private Room connectedW;
+    private ArrayList<String> connectedID = new ArrayList<String>();
+    private ArrayList<String> connectedDir = new ArrayList<String>();
 
     public ArrayList<Item> listItems(){
         return items;
+    }
+
+    public Item findItem(String name){
+      for (Item i : items){
+        if (i.getName().equals(name)){
+          return i;
+        }
+      }
+      return null;
     }
 
     public void addItem(Item item){
@@ -31,7 +45,7 @@ public class Room {
         return roomLongDescription;
     }
 
-    public void setLongDescription (String description){
+    public void setLongDescription(String description){
         roomLongDescription=description;
     }
 
@@ -39,27 +53,47 @@ public class Room {
         return roomShortDescription;
     }
 
-    public void setShortDescription (String description){
+    public void setShortDescription(String description){
         roomShortDescription=description;
     }
 
     public Room getConnectedRoom(String direction) {
-        String[] directions = {"N","E","S","W"};
-        for (int i=0;i<4;i++){
-          if (direction.equals(directions[i])){
-            return connectedRooms.get(i);
-          }
+        if (direction.equals("N")){
+          return connectedN;
+        }else if (direction.equals("E")){
+          return connectedE;
+        }else if (direction.equals("S")){
+          return connectedS;
+        }else if (direction.equals("W")){
+          return connectedW;
+        }else{
+          return null;
         }
-        return null;
     }
 
     public void setConnectedRoom(Room connectedRoom, String direction){
-      String[] directions = {"N","E","S","W"};
-        for (int i=0;i<4;i++){
-          if (direction.equals(directions[i])){
-            connectedRooms.set(i,connectedRoom);
-          }
+        if (direction.equals("N")){
+          connectedN=connectedRoom;
+        }else if (direction.equals("E")){
+          connectedE=connectedRoom;
+        }else if (direction.equals("S")){
+          connectedS=connectedRoom;
+        }else if (direction.equals("W")){
+          connectedW=connectedRoom;
         }
+    }
+
+    public ArrayList<String> getConnectedDir(){
+      return connectedDir;
+    }
+
+    public ArrayList<String> getConnectedID(){
+      return connectedID;
+    }
+
+    public void setConnectedID(String id, String direction){
+      connectedID.add(id);
+      connectedDir.add(direction);
     }
 
     public void setID(String id){

@@ -7,64 +7,82 @@ import java.util.Scanner;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.*;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class Game{
-
-    /* this is the class that runs the game.
-    You may need some member variables */
-
-    public static void main(String args[]) throws Exception {
-
-        /* You will need to instantiate an object of type
-        game as we're going to avoid using static methods
-        for this assignment */
-
+    public static void main(String[] args){
         Game theGame = new Game();
+        Scanner sc = new Scanner(System.in);
+        JSONObject jsonAdventure=null;
+        String userInput=null;
 
-        // 1. Print a welcome message to the user
+        //Welcome message
         System.out.println("Hello! Welcome to Adventure.");
 
-        // 2. Ask the user if they want to load a json file.
-        /*System.out.print("Do you want to load a json file? (Yes/No) ");
-        Scanner sc = new Scanner(System.in);*/
+        //Getting user input for loading JSON
+        do{
+          System.out.println("Do you want to load a json file? (Yes/No):");
+          userInput=sc.nextLine();
+        }while(!userInput.equals("Yes") && !userInput.equals("No"));
 
-        //Load JSON
+        //Loading JSON
+        if (userInput.equals("No")){ //Loading default JSON
+          jsonAdventure=theGame.loadAdventureJson("adventure_files/default.json");
+        }else if(userInput.equals("Yes")){ //Loading custom JSON
+          System.out.println("\n-- To use your own file, place it in the adventure_files folder and input the name of the file.json --");
+          do{
+            System.out.println("Enter your filename:");
+            String fileName=sc.nextLine();
+            jsonAdventure=theGame.loadAdventureJson("adventure_files/"+fileName);
+          }while(jsonAdventure==null);
+        }
 
-        /* 3. Parse the file the user specified to create the
-        adventure, or load your default adventure*/
-        JSONObject adventure=theGame.loadAdventureJson("adventure_files/example_adventure.json");
+        Adventure adventure = theGame.generateAdventure(jsonAdventure);
 
-        Adventure myAdventure = theGame.generateAdventure(adventure);
+        //Sets current room as first in room list
+        adventure.setCurrentRoom(adventure.listAllRooms().get(0));
 
-        // 4. Print the beginning of the adventure
+        do{
+          System.out.println("\n-----------------------------------");
+          System.out.println("\nYou are currently in: "+adventure.getCurrentRoomDescription());
 
-        // 5. Begin game loop here
-        /*Scanner sc = new Scanner(System.in);
-
-        while (1==2){
-          System.out.println("You are in <room>. Where would you like to go? (N/E/S/W) ");
-          String userInput = sc.nextLine();
-
-          String[] splitInput = userInput.split(" ");
-
-          if (splitInput[0].equals("go")){
-            adventure.currentRoom().getConnectedRoom(splitInput[1]);
+          if (adventure.getCurrentRoom().listItems().size()>0){
+            System.out.println("\nItems contained here:");
+            for (Item i : adventure.getCurrentRoom().listItems()){
+              System.out.println("\t"+i.getName());
+            }
           }
-        }*/
+          System.out.println("\nWhat would you like to do?");
+          userInput = sc.nextLine();
 
-        // 6. Get the user input. You'll need a Scanner
+          String[] command = userInput.split(" ");
 
-        /* 7+. Use a game instance method to parse the user
-        input to learn what the user wishes to do*/
-
-        //use a game instance method to execute the users wishes*/
-
-        /* if the user doesn't wish to quit,
-        repeat the steps above*/
+          if (command[0].equals("help")){
+            System.out.println("\nCommands:");
+            System.out.println("\tgo <N/E/S/W> - Traverses in the given direction");
+            System.out.println("\tlook (item name)- Gives description of current room or item in room (with item parameter)");
+            System.out.println("\tquit - Ends the adventure :(");
+          }else if (command[0].equals("go") && command.length==2){
+            if ((command[1].equals("N") || command[1].equals("E") || command[1].equals("S") || command[1].equals("W")) && adventure.getCurrentRoom().getConnectedRoom(command[1])!=null){
+              adventure.setCurrentRoom(adventure.getCurrentRoom().getConnectedRoom(command[1]));
+            }else{
+              System.out.println("\nInvalid move.");
+            }
+          }else if (command[0].equals("look") && command.length==1){ //Look command for room description
+            System.out.println("\nLong Description: "+adventure.getCurrentRoom().getLongDescription());
+          }else if (command[0].equals("look") && command.length==2){ //Look command for items
+            Item lookItem = adventure.getCurrentRoom().findItem(command[1]);
+            if (lookItem!=null){
+              System.out.println("\n"+lookItem.getLongDescription());
+            }else{
+              System.out.println("Invalid item name.");
+            }
+          }else{
+            System.out.println("\nInvalid usage. Try 'help' for help.");
+          }
+        }while(!userInput.equals("quit"));
     }
-
-    /* you must have these instance methods and may need more*/
 
     public JSONObject loadAdventureJson(String filename){
         try{
@@ -76,19 +94,19 @@ public class Game{
             return adventure;
 
         }catch (FileNotFoundException e){
-            System.out.println(e);
+            return null;
         }catch(IOException e){
-            System.out.println(e);
+            return null;
         }catch(ParseException e){
-            System.out.println(e);
+            return null;
         }
-
-        return null;
 
     }
 
     public Adventure generateAdventure(JSONObject obj) {
         Adventure adventure = new Adventure();
+
+        //Starting points in JSON
         JSONArray rooms = (JSONArray) obj.get("room");
         JSONArray items = (JSONArray) obj.get("item");
 
@@ -112,6 +130,14 @@ public class Game{
 
           //Initializes blank room to be written on to
           Room newRoom  = new Room();
+
+          JSONArray roomConnections = (JSONArray) current.get("entrance");
+
+          //Connects room IDs to be translated into rooms later
+          for (Object connection : roomConnections){
+            JSONObject c = (JSONObject) connection;
+            newRoom.setConnectedID(c.get("id").toString(),c.get("dir").toString());
+          }
 
           //Gives newRoom the properties of the JSONObject
           newRoom.setID(current.get("id").toString());
@@ -146,21 +172,22 @@ public class Game{
           adventure.listAllRooms().add(newRoom);
         }
 
-        //Handles room connections
-        for (Object currentRoom : rooms){
-          JSONObject r = (JSONObject) currentRoom;
-
-        }
-
-        //Prints rooms and their respective items. For testing
+        //Iterates through all rooms
         for (Room r : adventure.listAllRooms()){
-          System.out.println(r.getName() + " : " + r.getLongDescription());
-          for (Item i : r.listItems()){
-            System.out.println(i.getName());
+
+          //Iterates through connections of each room
+          for (int i=0; i<r.getConnectedID().size();i++){
+
+            //Iterates through all rooms to find matching ID
+            for (Room c : adventure.listAllRooms()){
+              //Checks for identical ID
+              if (c.getID().equals(r.getConnectedID().get(i))){
+                //Set r's connection as c
+                r.setConnectedRoom(c,r.getConnectedDir().get(i));
+              }
+            }
           }
         }
-
         return adventure;
     }
-
 }

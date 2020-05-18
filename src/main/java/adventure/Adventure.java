@@ -20,4 +20,12 @@ public class Adventure{
         return currentRoom.getShortDescription();
     }
 
+    public void setCurrentRoom(Room inputRoom){
+      currentRoom=inputRoom;
+    }
+
+    public Room getCurrentRoom(){
+      return currentRoom;
+    }
+
 }

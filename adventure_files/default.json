@@ -1,0 +1,68 @@
+{
+  "adventure": {
+    "room": [
+      {
+        "id": 100,
+        "name": "the living room",
+        "short_description": "The living room. Reasonably cozy",
+        "long_description": "A room with a few really cool couches, a carpet, and pictures of my really cool friend Geoff.",
+        "entrance": [
+          {
+            "id": 101,
+            "dir": "S"
+          }
+        ]
+      },
+      {
+        "id": 101,
+        "name": "the kitchen",
+        "short_description": "The kitchen with a stove.",
+        "long_description": "Somewhere people probably cook food. Who knows?",
+        "entrance": [
+          {
+            "id": 100,
+            "dir": "N"
+          },
+          {
+            "id": 102,
+            "dir": "W"
+          }
+        ],
+        "loot": [
+          {
+            "id": 2
+          }
+        ]
+      },
+      {
+        "id": 102,
+        "name": "the bathroom",
+        "short_description": "The bathroom",
+        "long_description": "There is a little toilet, a sink, and a shower with a really fantastic curtain",
+        "entrance": [
+          {
+            "id": 101,
+            "dir": "E"
+          }
+        ],
+        "loot": [
+          {
+            "id": 1
+          }
+        ]
+      }
+    ],
+    "item": [
+      {
+        "id": 1,
+        "name": "ball",
+        "desc": "a cool litle green ball"
+      },
+      {
+        "id": 2,
+        "name": "cube",
+        "desc": "a really super cool red cube"
+      }
+    ]
+  }
+}
