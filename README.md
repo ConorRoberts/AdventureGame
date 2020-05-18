@@ -29,11 +29,15 @@ Delete this section before you submit for grading.
 
 
 ## How to operate your program
+To run, use these commands in this order.
+* "mvn compile"
+* "mvn exec:java"
 
 ### Running from the command line (without maven)
+I don't know how you would run this without maven
 
 ### Instructions for using the program
-
+* "go <N/E/S/W" : moves in the specified direction
 
 
 ## Statement of Individual Work

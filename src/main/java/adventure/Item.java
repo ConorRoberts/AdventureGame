@@ -2,36 +2,40 @@ package adventure;
 
 public class Item{
 
+    private String itemDescription;
     private String itemName;
-    private String roomDescription;
     private Room itemRoom;
-    private int itemID;
+    private String itemID;
 
     public String getName(){
         return itemName;
-    }
-
-    public String getLongDescription(){
-        return roomDescription;
-    }
-
-    public Room getContainingRoom(){
-        return itemRoom;
     }
 
     public void setName(String name){
         itemName=name;
     }
 
-    public void setRoom(Room room){
+    public String getLongDescription(){
+        return itemDescription;
+    }
+
+    public void setLongDescription(String description){
+      itemDescription=description;
+    }
+
+    public Room getContainingRoom(){
+        return itemRoom;
+    }
+
+    public void setContainingRoom(Room room){
         itemRoom=room;
     }
 
-    public void setID(int ID){
-        itemID=ID;
+    public void setID(String id){
+        itemID=id;
     }
 
-    public int getID(){
+    public String getID(){
         return itemID;
     }
 

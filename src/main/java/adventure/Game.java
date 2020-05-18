@@ -30,29 +30,28 @@ public class Game{
         Scanner sc = new Scanner(System.in);*/
 
         //Load JSON
-        JSONObject adventure=theGame.loadAdventureJson("example_adventure.json");
-
-        Adventure myAdventure = theGame.generateAdventure(adventure);
-
-        /*for (Object r : rooms){
-            JSONObject current = (JSONObject) r;
-            String temp=(String) current.get("name");
-            System.out.println(temp);
-        }*/
-
-        /* TESTING
-        Parse json
-        Store rooms in arraylist using methods
-        Print all rooms and some given properties
-        */
-
 
         /* 3. Parse the file the user specified to create the
         adventure, or load your default adventure*/
+        JSONObject adventure=theGame.loadAdventureJson("adventure_files/example_adventure.json");
+
+        Adventure myAdventure = theGame.generateAdventure(adventure);
 
         // 4. Print the beginning of the adventure
 
         // 5. Begin game loop here
+        /*Scanner sc = new Scanner(System.in);
+
+        while (1==2){
+          System.out.println("You are in <room>. Where would you like to go? (N/E/S/W) ");
+          String userInput = sc.nextLine();
+
+          String[] splitInput = userInput.split(" ");
+
+          if (splitInput[0].equals("go")){
+            adventure.currentRoom().getConnectedRoom(splitInput[1]);
+          }
+        }*/
 
         // 6. Get the user input. You'll need a Scanner
 
@@ -90,9 +89,76 @@ public class Game{
 
     public Adventure generateAdventure(JSONObject obj) {
         Adventure adventure = new Adventure();
+        JSONArray rooms = (JSONArray) obj.get("room");
+        JSONArray items = (JSONArray) obj.get("item");
 
-        JSONArray jsonRoom = (JSONArray) obj.get("room");
-        JSONArray jsonItem = (JSONArray) obj.get("item");
+        //Adds items to Adventure's list of items
+        for (Object i : items){
+          JSONObject current = (JSONObject) i;
+
+          Item newItem = new Item();
+
+          //Gives newItem properties of JSONObject
+          newItem.setID(current.get("id").toString());
+          newItem.setName(current.get("name").toString());
+          newItem.setLongDescription(current.get("desc").toString());
+
+          adventure.listAllItems().add(newItem);
+        }
+
+        //Adds rooms to Adventure's list of rooms
+        for (Object r : rooms){
+          JSONObject current = (JSONObject) r;
+
+          //Initializes blank room to be written on to
+          Room newRoom  = new Room();
+
+          //Gives newRoom the properties of the JSONObject
+          newRoom.setID(current.get("id").toString());
+          newRoom.setName(current.get("name").toString());
+          newRoom.setShortDescription(current.get("short_description").toString());
+          newRoom.setLongDescription(current.get("long_description").toString());
+
+          //Grabs the properties of loot from JSON
+          JSONArray loot = (JSONArray) current.get("loot");
+
+          //Checks for loot inside a room
+          if (loot!=null){
+
+            //Goes through each loot item in room
+            for (Object j : loot){
+
+              JSONObject objLoot = (JSONObject) j;
+
+              //Goes through all items in adventure added earlier
+              for (Item i : adventure.listAllItems()){
+
+                //Checks for an identical ID within Adventure's item list
+                if (i.getID().equals(objLoot.get("id").toString())){
+                  //Appends the loot item to the end of the room's item list
+                  newRoom.addItem(i);
+                }
+              }
+            }
+          }
+
+          //Adds the room to the adventure
+          adventure.listAllRooms().add(newRoom);
+        }
+
+        //Handles room connections
+        for (Object currentRoom : rooms){
+          JSONObject r = (JSONObject) currentRoom;
+
+        }
+
+        //Prints rooms and their respective items. For testing
+        for (Room r : adventure.listAllRooms()){
+          System.out.println(r.getName() + " : " + r.getLongDescription());
+          for (Item i : r.listItems()){
+            System.out.println(i.getName());
+          }
+        }
 
         return adventure;
     }

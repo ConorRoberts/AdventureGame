@@ -7,10 +7,9 @@ public class Room {
     private String roomName;
     private String roomLongDescription;
     private String roomShortDescription;
-    private int roomID;
+    private String roomID;
     private ArrayList<Item> items = new ArrayList<Item>();
-
-    /* required public methods */
+    private ArrayList<Room> connectedRooms = new ArrayList<Room>();
 
     public ArrayList<Item> listItems(){
         return items;
@@ -45,18 +44,29 @@ public class Room {
     }
 
     public Room getConnectedRoom(String direction) {
+        String[] directions = {"N","E","S","W"};
+        for (int i=0;i<4;i++){
+          if (direction.equals(directions[i])){
+            return connectedRooms.get(i);
+          }
+        }
         return null;
     }
 
     public void setConnectedRoom(Room connectedRoom, String direction){
-
+      String[] directions = {"N","E","S","W"};
+        for (int i=0;i<4;i++){
+          if (direction.equals(directions[i])){
+            connectedRooms.set(i,connectedRoom);
+          }
+        }
     }
 
-    public void setID(int id){
+    public void setID(String id){
         roomID=id;
     }
 
-    public int getID(){
+    public String getID(){
         return roomID;
     }
 }
