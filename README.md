@@ -34,10 +34,12 @@ To run, use these commands in this order.
 * "mvn exec:java"
 
 ### Running from the command line (without maven)
-I don't know how you would run this without maven
+javac Game.java
+java Game
 
 ### Instructions for using the program
-* "go <N/E/S/W" : moves in the specified direction
+* Load json file formatted for this game.
+* Type 'help' for help once game is running
 
 
 ## Statement of Individual Work
