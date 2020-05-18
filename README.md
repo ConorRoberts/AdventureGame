@@ -34,8 +34,7 @@ To run, use these commands in this order.
 * "mvn exec:java"
 
 ### Running from the command line (without maven)
-* javac Game.java
-* java Game
+* I would really recommend you not do that. I mean, why would you? It's okay, you really don't have to.
 
 ### Instructions for using the program
 * Load json file formatted for this game.
