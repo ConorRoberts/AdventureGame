@@ -29,14 +29,17 @@ Delete this section before you submit for grading.
 
 
 ## How to operate your program
-To run, use these commands in this order.
-* "mvn compile"
-* "mvn exec:java"
+* To run, use these commands in this order.
+    * "mvn compile"
+    * "mvn exec:java"
 
 ### Running from the command line (without maven)
-* I would really recommend you not do that. I mean, why would you? It's okay, you really don't have to.
+* Navigate to /src/main/java/adventure
+* run "javac *.java"
+* run "java Game"
 
 ### Instructions for using the program
+* Place adventure game files in adventure_files folder
 * Load json file formatted for this game.
 * Type 'help' for help once game is running
 
