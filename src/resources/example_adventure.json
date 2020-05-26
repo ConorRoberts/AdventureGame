@@ -1,0 +1,69 @@
+{
+  "adventure": {
+    "room": [
+      {
+        "id": 100,
+        "start": "true",
+        "name": "the lobby",
+        "short_description": "This is the lobby of the hotel",
+        "long_description": "The lobby is a large room with ornate pictures on the walls",
+        "entrance": [
+          {
+            "id": 101,
+            "dir": "S"
+          }
+        ]
+      },
+      {
+        "id": 101,
+        "name": "the ballroom",
+        "short_description": "a ballroom",
+        "long_description": "a longer description of a ballroom",
+        "entrance": [
+          {
+            "id": 100,
+            "dir": "N"
+          },
+          {
+            "id": 102,
+            "dir": "W"
+          }
+        ],
+        "loot": [
+          {
+            "id": 2
+          }
+        ]
+      },
+      {
+        "id": 102,
+        "name": "the coatroom",
+        "short_description": "this is a coatroom",
+        "long_description": "a longer description of a coatroom",
+        "entrance": [
+          {
+            "id": 101,
+			"dir": "E"
+          }
+        ],
+        "loot": [
+          {
+            "id": 1
+          }
+        ]
+      }
+    ],
+    "item": [
+      {
+        "id": 1,
+        "name": "potion",
+        "desc": "a potion in a red bottle"
+      },
+      {
+        "id": 2,
+        "name": "wand",
+        "desc": "an ornate wand carved from deep auburn wood"
+      }
+    ]
+  }
+}

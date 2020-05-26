@@ -8,24 +8,36 @@ public class Adventure{
     private ArrayList<Room> rooms = new ArrayList<Room>();
     private ArrayList<Item> items= new ArrayList<Item>();
 
-    public ArrayList<Room> listAllRooms(){
+    public final ArrayList<Room> listAllRooms(){
         return rooms;
     }
 
-    public ArrayList<Item> listAllItems(){
+    public final ArrayList<Item> listAllItems(){
         return items;
     }
 
-    public String getCurrentRoomDescription(){
+    public final String getCurrentRoomDescription(){
         return currentRoom.getShortDescription();
     }
 
-    public void setCurrentRoom(Room inputRoom){
-      currentRoom=inputRoom;
+    public final void setCurrentRoom(Room room){
+      currentRoom=room;
     }
 
-    public Room getCurrentRoom(){
+    public final void addRoom(Room room){
+      this.rooms.add(room);
+    }
+
+    public final Room getCurrentRoom(){
       return currentRoom;
+    }
+
+    public Item findItem(String id){
+      return null;
+    }
+
+    public Room findRoom(String id){
+      return null;
     }
 
 }

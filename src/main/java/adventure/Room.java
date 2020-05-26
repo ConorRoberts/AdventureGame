@@ -1,26 +1,24 @@
 package adventure;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Room {
     /* you will need to add some private member variables */
-    private String roomName;
-    private String roomLongDescription;
-    private String roomShortDescription;
-    private String roomID;
+    private String name;
+    private String longDescription;
+    private String shortDescription;
+    private String id;
     private ArrayList<Item> items = new ArrayList<Item>();
-    private Room connectedN;
-    private Room connectedE;
-    private Room connectedS;
-    private Room connectedW;
+    private HashMap<String,Room> connections= new HashMap<String,Room>();
     private ArrayList<String> connectedID = new ArrayList<String>();
     private ArrayList<String> connectedDir = new ArrayList<String>();
 
-    public ArrayList<Item> listItems(){
+    public final ArrayList<Item> listItems(){
         return items;
     }
 
-    public Item findItem(String name){
+    public final Item findItem(String name){
       for (Item i : items){
         if (i.getName().equals(name)){
           return i;
@@ -29,78 +27,60 @@ public class Room {
       return null;
     }
 
-    public void addItem(Item item){
+    public final void addItem(Item item){
         items.add(item);
     }
 
-    public String getName(){
-        return roomName;
+    public final String getName(){
+        return this.name;
     }
 
-    public void setName(String name){
-        roomName=name;
+    public final void setName(String name){
+        this.name=name;
     }
 
-    public String getLongDescription(){
-        return roomLongDescription;
+    public final String getLongDescription(){
+        return this.longDescription;
     }
 
-    public void setLongDescription(String description){
-        roomLongDescription=description;
+    public final void setLongDescription(String description){
+        this.longDescription=description;
     }
 
-    public String getShortDescription(){
-        return roomShortDescription;
+    public final String getShortDescription(){
+        return this.shortDescription;
     }
 
-    public void setShortDescription(String description){
-        roomShortDescription=description;
+    public final void setShortDescription(String description){
+        this.shortDescription=description;
     }
 
-    public Room getConnectedRoom(String direction) {
-        if (direction.equals("N")){
-          return connectedN;
-        }else if (direction.equals("E")){
-          return connectedE;
-        }else if (direction.equals("S")){
-          return connectedS;
-        }else if (direction.equals("W")){
-          return connectedW;
-        }else{
-          return null;
-        }
+    public final Room getConnectedRoom(String dir) {
+        return connections.get(dir);
     }
 
-    public void setConnectedRoom(Room connectedRoom, String direction){
-        if (direction.equals("N")){
-          connectedN=connectedRoom;
-        }else if (direction.equals("E")){
-          connectedE=connectedRoom;
-        }else if (direction.equals("S")){
-          connectedS=connectedRoom;
-        }else if (direction.equals("W")){
-          connectedW=connectedRoom;
-        }
+    public final void setConnectedRoom(Room room, String dir){
+        connections.put(dir,room);
     }
 
-    public ArrayList<String> getConnectedDir(){
+    public final ArrayList<String> getConnectedDir(){
       return connectedDir;
     }
 
-    public ArrayList<String> getConnectedID(){
+    public final ArrayList<String> getConnectedID(){
       return connectedID;
     }
 
-    public void setConnectedID(String id, String direction){
+    public final void setConnectedID(String id, String direction){
       connectedID.add(id);
       connectedDir.add(direction);
     }
 
-    public void setID(String id){
-        roomID=id;
+    public final void setID(String id){
+        this.id=id;
     }
 
-    public String getID(){
-        return roomID;
+    public final String getID(){
+        return this.id;
     }
 }

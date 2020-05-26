@@ -7,35 +7,35 @@ public class Item{
     private Room itemRoom;
     private String itemID;
 
-    public String getName(){
+    public final String getName(){
         return itemName;
     }
 
-    public void setName(String name){
+    public final void setName(String name){
         itemName=name;
     }
 
-    public String getLongDescription(){
+    public final String getLongDescription(){
         return itemDescription;
     }
 
-    public void setLongDescription(String description){
+    public final void setLongDescription(String description){
       itemDescription=description;
     }
 
-    public Room getContainingRoom(){
+    public final Room getContainingRoom(){
         return itemRoom;
     }
 
-    public void setContainingRoom(Room room){
+    public final void setContainingRoom(Room room){
         itemRoom=room;
     }
 
-    public void setID(String id){
+    public final void setID(String id){
         itemID=id;
     }
 
-    public String getID(){
+    public final String getID(){
         return itemID;
     }
 
