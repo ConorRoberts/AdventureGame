@@ -45,9 +45,9 @@
     <!-- Checks for Size Violations.                    -->
     <!-- See https://checkstyle.org/config_sizes.html -->
     <module name="FileLength">
-        <property name="max" value="1500"/> 
+        <property name="max" value="1500"/>
     </module>
-    
+
     <module name="LineLength">
       <property name="fileExtensions" value="java"/>
      <property name="max" value="120"/>
@@ -108,11 +108,11 @@
         <!-- Checks for Size Violations.                    -->
         <!-- See https://checkstyle.org/config_sizes.html -->
         <module name="MethodLength">
-             <property name="max" value="40"/>
+             <property name="max" value="20"/>
              <property name="countEmpty" value="false"/>
          </module>
         <module name="ParameterNumber">
-              <property name="max" value="5"/>
+              <property name="max" value="10"/>
           </module>
 
 
