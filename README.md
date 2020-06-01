@@ -34,9 +34,9 @@ Delete this section before you submit for grading.
     * "mvn exec:java"
 
 ### Running from the command line (without maven)
-* Navigate to /src/main/java/adventure
-* run "javac *.java"
-* run "java Game"
+* run "mvn assembly:assembly"
+* Navigate to the target folder
+* run "java -cp <jar_name>.jar adventure.Game <-l/-a> <save/json>"
 
 ### Instructions for using the program
 * Place adventure game files in adventure_files folder
