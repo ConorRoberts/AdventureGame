@@ -7,6 +7,7 @@ public class Player implements java.io.Serializable{
 
   private static final long serialVersionUID = -9064936473102319459L;
 
+  private String name;
   private ArrayList<Item> items;
   private HashMap<String,Item> itemsMap;
   private Room currentRoom;
@@ -16,18 +17,23 @@ public class Player implements java.io.Serializable{
     itemsMap = new HashMap<String, Item>();
   }
 
+  @Override
+  public final String toString(){
+    return ("useless method");
+  }
+
 /**
  * 
- * @param name
- * @return
+ * @param itemName
+ * @return Item object with given name
  */
-  public final Item findItem(String name){
-    return itemsMap.get(name);
+  public final Item findItem(String itemName){
+    return itemsMap.get(itemName);
   }
 
   /**
    * 
-   * @return
+   * @return An arraylist of the player's inventory
    */
   public final ArrayList<Item> getInventory(){
     return items;
@@ -54,16 +60,8 @@ public class Player implements java.io.Serializable{
   }
 
   /**
-   * 
-   * @return
-   */
-  public final String getSaveGameName(){
-    return null;
-  }
-
-  /**
-   * 
-   * @return
+   * This doesn't work because it really shouldn't be in here.
+   * @return Then player's name
    */
   public final String getName(){
     return null;
@@ -71,7 +69,7 @@ public class Player implements java.io.Serializable{
 
   /**
    * 
-   * @return
+   * @return Room object of current room
    */
   public final Room getCurrentRoom(){
     return currentRoom;

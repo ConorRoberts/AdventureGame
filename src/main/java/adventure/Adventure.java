@@ -28,7 +28,7 @@ public class Adventure implements java.io.Serializable{
      */
     @Override
     public final String toString(){
-      return ("cool");
+      return ("useless method");
     }
 
     /**
@@ -74,6 +74,14 @@ public class Adventure implements java.io.Serializable{
     */
     public final String getCurrentRoomDescription(){
         return player.getCurrentRoom().getShortDescription();
+    }
+
+    /**
+     * 
+     * @return Current room
+     */
+    public final Room getCurrentRoom(){
+      return player.getCurrentRoom();
     }
     
     /**

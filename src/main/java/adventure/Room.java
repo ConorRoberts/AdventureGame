@@ -18,8 +18,8 @@ public class Room implements java.io.Serializable{
     public Room(){
         items = new ArrayList<Item>();
         connections= new HashMap<String,String>();
-        connectedRooms = new HashMap<String,Room>();
         itemsName = new HashMap<String, Item>();
+        connectedRooms = new HashMap<String, Room>();
     }
 
     @Override
@@ -29,19 +29,7 @@ public class Room implements java.io.Serializable{
 
     /**
      * 
-     * @return
-     */
-    public final HashMap<String,Room> getConnectedRoomList(){
-        return connectedRooms;
-    }
-
-    public final HashMap<String,String> getConnectedIDList(){
-        return connections;
-    }
-
-    /**
-     * 
-     * @return
+     * @return Arraylist of items contained in room
      */
     public final ArrayList<Item> listItems(){
         return items;
@@ -50,7 +38,7 @@ public class Room implements java.io.Serializable{
     /**
      * 
      * @param newName
-     * @return
+     * @return Item object with specified name
      */
     public final Item findItem(String newName){
       return itemsName.get(newName);
@@ -59,7 +47,7 @@ public class Room implements java.io.Serializable{
     /**
      * 
      * @param newName
-     * @return
+     * @return Whether or not the room contains this item
      */
     public final boolean containsItem(String newName){
       return itemsName.containsKey(newName);
@@ -76,7 +64,7 @@ public class Room implements java.io.Serializable{
 
     /**
      * 
-     * @return
+     * @return Room name
      */
     public final String getName(){
         return this.name;
@@ -92,7 +80,7 @@ public class Room implements java.io.Serializable{
 
     /**
      * 
-     * @return
+     * @return Room long description
      */
     public final String getLongDescription(){
         return this.longDescription;
@@ -107,7 +95,7 @@ public class Room implements java.io.Serializable{
 
     /**
      * 
-     * @return
+     * @return Room short description
      */
     public final String getShortDescription(){
         return this.shortDescription;
@@ -124,25 +112,28 @@ public class Room implements java.io.Serializable{
     /**
      * 
      * @param dir
-     * @return
+     * @return Room id connected in specified direction
      */
     public final Room getConnectedRoom(String dir) {
         return connectedRooms.get(dir);
     }
 
     /**
-     * Adds a connected room object
-     * @param dir
-     * @param room
+     * 
+     * @return Hashmap of connected IDs
      */
-    public final void setConnectedRoomAsRoom(String dir, Room room){
-        connectedRooms.put(dir,room);
+    public final HashMap<String,String> getConnectedRoomsList(){
+        return connections;
+    }
+
+    public final HashMap<String,Room> getConnectedRoomsListTwo(){
+        return connectedRooms;
     }
 
     /**
      * 
      * @param dir
-     * @return
+     * @return Whether or not there is a connected room in that direction
      */
     public final boolean hasConnection(String dir){
       return connections.containsKey(dir);
@@ -157,6 +148,10 @@ public class Room implements java.io.Serializable{
         connections.put(connectionDir,connectionID);
     }
 
+    public final void setConnectedRoomAsRoom(String connectionDir, Room room){
+        connectedRooms.put(connectionDir,room);
+    }
+
     /**
      * 
      * @param newID
@@ -167,7 +162,7 @@ public class Room implements java.io.Serializable{
 
     /**
      * 
-     * @return
+     * @return Room ID
      */
     public final String getID(){
         return this.id;

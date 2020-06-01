@@ -3,7 +3,6 @@ package adventure;
 import java.util.Map;
 import java.util.Scanner;
 import java.io.FileReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -28,11 +27,9 @@ public class Game implements java.io.Serializable{
     public static void main(String[] args){
         Game game = new Game();
         String userInput=null;
-
         game.startup(args);
-
         do{
-          System.out.println("Room: "+game.adventure.getCurrentRoomDescription());
+          System.out.println("Room: "+game.adventure.getPlayer().getCurrentRoom().getShortDescription());
           game.printRoomItems(game.adventure.getPlayer().getCurrentRoom());
           userInput = game.sc.nextLine();
           try{
@@ -45,12 +42,16 @@ public class Game implements java.io.Serializable{
 
         System.out.println("Would you like to save? (Y/N)");
         userInput=game.sc.nextLine();
-        if (userInput.equals("Y")){
-          System.out.println("Enter a file name: ");
-          userInput=game.sc.nextLine();
-          game.save(userInput);
-        }
+        game.handleSave(userInput,game);
         game.sc.close();
+    }
+
+    private void handleSave(String input, Game game){
+      if (input.equals("Y")){
+        System.out.println("Enter a file name: ");
+        input=game.sc.nextLine();
+        game.save(input);
+      }
     }
 
     private void startup(String[] args){
@@ -301,9 +302,11 @@ public class Game implements java.io.Serializable{
     }
   }
 
-  private void parseConnectionsAsRoom(Adventure newAdventure){
-    for (Room r : newAdventure.listAllRooms()){
-      r.getConnectedRoomList().forEach((dir,id) -> r.setConnectedRoomAsRoom(dir,adventure.findRoom("id")));
+  private void parseConnectionsAsRooms(Adventure newAdventure){
+    for(Room r : newAdventure.listAllRooms()){
+      for (Map.Entry<String,String> m : r.getConnectedRoomsList().entrySet()) {
+        r.setConnectedRoomAsRoom(m.getKey(),newAdventure.findRoom(m.getValue()));
+      }
     }
   }
 
@@ -320,7 +323,7 @@ public class Game implements java.io.Serializable{
         parseItems(newAdventure, items);
         parseRooms(newAdventure, rooms);
 
-        parseConnectionsAsRoom(newAdventure);
+        parseConnectionsAsRooms(newAdventure);
 
         newAdventure.getPlayer().setCurrentRoom(newAdventure.listAllRooms().get(0));
         return newAdventure;
