@@ -1,42 +1,56 @@
 package adventure;
 
-public class Item{
+public class Item implements java.io.Serializable{
 
-    private String itemDescription;
-    private String itemName;
-    private Room itemRoom;
-    private String itemID;
+    private static final long serialVersionUID = -9064936473102319459L;
 
-    public final String getName(){
-        return itemName;
+    private String description;
+    private String name;
+    private Room room;
+    private String id;
+
+    public Item(){
+      
     }
 
-    public final void setName(String name){
-        itemName=name;
+    /**
+     * @return A string formatted version of the object
+     */
+    @Override
+    public final String toString(){
+      return (name + "("+id+"): "+description);
+    }
+
+    public final String getName(){
+        return this.name;
+    }
+
+    public final void setName(String newName){
+        this.name=newName;
     }
 
     public final String getLongDescription(){
-        return itemDescription;
+        return this.description;
     }
 
-    public final void setLongDescription(String description){
-      itemDescription=description;
+    public final void setLongDescription(String newDescription){
+      this.description=newDescription;
     }
 
     public final Room getContainingRoom(){
-        return itemRoom;
+        return this.room;
     }
 
-    public final void setContainingRoom(Room room){
-        itemRoom=room;
+    public final void setContainingRoom(Room newRoom){
+        this.room=newRoom;
     }
 
-    public final void setID(String id){
-        itemID=id;
+    public final void setID(String newID){
+        this.id=newID;
     }
 
     public final String getID(){
-        return itemID;
+        return this.id;
     }
 
 }

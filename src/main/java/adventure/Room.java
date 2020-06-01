@@ -3,84 +3,182 @@ package adventure;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Room {
-    /* you will need to add some private member variables */
+public class Room implements java.io.Serializable{
+
+    private static final long serialVersionUID = -9064936473102319459L;
     private String name;
     private String longDescription;
     private String shortDescription;
     private String id;
-    private ArrayList<Item> items = new ArrayList<Item>();
-    private HashMap<String,Room> connections= new HashMap<String,Room>();
-    private ArrayList<String> connectedID = new ArrayList<String>();
-    private ArrayList<String> connectedDir = new ArrayList<String>();
+    private ArrayList<Item> items;
+    private HashMap<String,String> connections;
+    private HashMap<String,Room> connectedRooms;
+    private HashMap<String, Item> itemsName;
 
+    public Room(){
+        items = new ArrayList<Item>();
+        connections= new HashMap<String,String>();
+        connectedRooms = new HashMap<String,Room>();
+        itemsName = new HashMap<String, Item>();
+    }
+
+    @Override
+    public final String toString(){
+      return (name + "("+id+"): "+shortDescription);
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public final HashMap<String,Room> getConnectedRoomList(){
+        return connectedRooms;
+    }
+
+    public final HashMap<String,String> getConnectedIDList(){
+        return connections;
+    }
+
+    /**
+     * 
+     * @return
+     */
     public final ArrayList<Item> listItems(){
         return items;
     }
 
-    public final Item findItem(String name){
-      for (Item i : items){
-        if (i.getName().equals(name)){
-          return i;
-        }
-      }
-      return null;
+    /**
+     * 
+     * @param newName
+     * @return
+     */
+    public final Item findItem(String newName){
+      return itemsName.get(newName);
     }
 
+    /**
+     * 
+     * @param newName
+     * @return
+     */
+    public final boolean containsItem(String newName){
+      return itemsName.containsKey(newName);
+    }
+
+    /**
+     * 
+     * @param item
+     */
     public final void addItem(Item item){
         items.add(item);
+        itemsName.put(item.getName(), item);
     }
 
+    /**
+     * 
+     * @return
+     */
     public final String getName(){
         return this.name;
     }
 
-    public final void setName(String name){
-        this.name=name;
+    /**
+     * 
+     * @param newName
+     */
+    public final void setName(String newName){
+        this.name=newName;
     }
 
+    /**
+     * 
+     * @return
+     */
     public final String getLongDescription(){
         return this.longDescription;
     }
 
-    public final void setLongDescription(String description){
-        this.longDescription=description;
+    /**
+    * @param newDescription Description for room
+    */
+    public final void setLongDescription(String newDescription){
+        this.longDescription=newDescription;
     }
 
+    /**
+     * 
+     * @return
+     */
     public final String getShortDescription(){
         return this.shortDescription;
     }
 
-    public final void setShortDescription(String description){
-        this.shortDescription=description;
+    /**
+     * 
+     * @param newDescription
+     */
+    public final void setShortDescription(String newDescription){
+        this.shortDescription=newDescription;
     }
 
+    /**
+     * 
+     * @param dir
+     * @return
+     */
     public final Room getConnectedRoom(String dir) {
-        return connections.get(dir);
+        return connectedRooms.get(dir);
     }
 
-    public final void setConnectedRoom(Room room, String dir){
-        connections.put(dir,room);
+    /**
+     * Adds a connected room object
+     * @param dir
+     * @param room
+     */
+    public final void setConnectedRoomAsRoom(String dir, Room room){
+        connectedRooms.put(dir,room);
     }
 
-    public final ArrayList<String> getConnectedDir(){
-      return connectedDir;
+    /**
+     * 
+     * @param dir
+     * @return
+     */
+    public final boolean hasConnection(String dir){
+      return connections.containsKey(dir);
     }
 
-    public final ArrayList<String> getConnectedID(){
-      return connectedID;
+    /**
+     * Adds a connected room ID
+     * @param connectionDir
+     * @param connectionID
+     */
+    public final void setConnectedRoom(String connectionDir, String connectionID){
+        connections.put(connectionDir,connectionID);
     }
 
-    public final void setConnectedID(String id, String direction){
-      connectedID.add(id);
-      connectedDir.add(direction);
+    /**
+     * 
+     * @param newID
+     */
+    public final void setID(String newID){
+        this.id=newID;
     }
 
-    public final void setID(String id){
-        this.id=id;
-    }
-
+    /**
+     * 
+     * @return
+     */
     public final String getID(){
         return this.id;
+    }
+
+    /**
+     * 
+     * @param item
+     */
+    public final void removeItem(Item item){
+      items.remove(items.indexOf(item));
+      itemsName.remove(item.getName());
     }
 }
