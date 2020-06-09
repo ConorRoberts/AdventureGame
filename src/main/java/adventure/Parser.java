@@ -19,7 +19,7 @@ public class Parser{
   * @param input Line of text to parse
   * @return Command object complete with parsed input
   */
-  public Command parseUserInput(String input) throws InvalidCommandException{
+  public Command parseUserCommand(String input) throws InvalidCommandException{
     String[] split = input.split(" ",2);
     String action;
     String noun;

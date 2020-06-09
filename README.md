@@ -1,25 +1,3 @@
-# Getting Started
-Delete this section before you submit for grading.
-
-#### Starting your assignment
-
-* clone this repository to your computer
-* make an A1 branch
- * git branch A1
- * git checkout A1
-
-#### To use mvn from the command line
-* clean:  mvn clean
-* checkstyle: mvn checkstyle:checkstyle  (results show up in target/site)
-* compile : mvn compile
-* execute: 'mvn exec:java'
-
-#### Checkstyle
- * results will show up in a nice html format in target/site
- * uses the file checks.xml that is in the config directory
-
-# README info to submit
-
 ## Author Information
 
 * Name: Conor Roberts
@@ -29,19 +7,20 @@ Delete this section before you submit for grading.
 
 
 ## How to operate your program
-* To run, use these commands in this order.
+* To run using maven, use these commands in this order.
     * "mvn compile"
     * "mvn exec:java"
+* To compile into executable jar
+    * run "mvn assembly:assembly"
 
 ### Running from the command line (without maven)
-* run "mvn assembly:assembly"
-* Navigate to the target folder
-* run "java -cp <jar_name>.jar adventure.Game <-l/-a> <save/json>"
+* Locate .jar in target folder
+* run "java -cp jar_path.jar adventure.Game [-l/-a] [save/json]"
+* To load the **default** game, do not specify any additional arguments
 
 ### Instructions for using the program
-* Place adventure game files in adventure_files folder
-* Load json file formatted for this game.
-* Type 'help' for help once game is running
+* Place any adventure.json in /src/resources 
+* Type 'help' for list of commands once game is running
 
 
 ## Statement of Individual Work

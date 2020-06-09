@@ -11,15 +11,21 @@ public class Player implements java.io.Serializable{
   private ArrayList<Item> items;
   private HashMap<String,Item> itemsMap;
   private Room currentRoom;
+  private String saveName;
 
   public Player(){
     items= new ArrayList<Item>();
     itemsMap = new HashMap<String, Item>();
   }
 
+  public Player(String newName){
+    this();
+    setName(newName);
+  }
+
   @Override
   public final String toString(){
-    return ("useless method");
+    return ("Player: "+name);
   }
 
 /**
@@ -29,6 +35,15 @@ public class Player implements java.io.Serializable{
  */
   public final Item findItem(String itemName){
     return itemsMap.get(itemName);
+  }
+
+  /**
+   * Useful to check if findItem will be null
+   * @param itemName Item object name
+   * @return Whether the item exists in player inventory
+   */
+  public final boolean hasItem(String itemName){
+    return itemsMap.containsKey(itemName);
   }
 
   /**
@@ -55,16 +70,25 @@ public class Player implements java.io.Serializable{
    */
   public final void drop(Item item){
     currentRoom.addItem(item);
-    items.remove(items.indexOf(item));
+    items.remove(item);
     itemsMap.remove(item.getName());
   }
 
   /**
-   * This doesn't work because it really shouldn't be in here.
+   * Return player name
    * @return Then player's name
    */
   public final String getName(){
-    return null;
+    return name;
+  }
+
+
+  /**
+   * Sets player name
+   * @param newName Player's name
+   */
+  public final void setName(String newName){
+    name=newName;
   }
 
   /**
@@ -76,11 +100,23 @@ public class Player implements java.io.Serializable{
   }
 
   /**
-   * 
-   * @param room
+   * Sets player's current position
+   * @param room Room object
    */
   public final void setCurrentRoom(Room room){
     currentRoom=room;
+  }
+
+  /**
+   * Why would I ever want to use this method???
+   * @return Nothing useful lol
+   */
+  public final String getSaveGameName(){
+    return saveName;
+  }
+
+  public final void setGameSaveName(String newSaveName){
+    saveName=newSaveName;
   }
 
 }

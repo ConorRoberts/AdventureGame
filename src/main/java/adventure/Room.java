@@ -3,6 +3,9 @@ package adventure;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 public class Room implements java.io.Serializable{
 
     private static final long serialVersionUID = -9064936473102319459L;
@@ -16,15 +19,55 @@ public class Room implements java.io.Serializable{
     private HashMap<String, Item> itemsName;
 
     public Room(){
-        items = new ArrayList<Item>();
-        connections= new HashMap<String,String>();
-        itemsName = new HashMap<String, Item>();
-        connectedRooms = new HashMap<String, Room>();
+        items = new ArrayList<>();
+        connections= new HashMap<>();
+        itemsName = new HashMap<>();
+        connectedRooms = new HashMap<>();
+    }
+
+    public Room(Adventure adv, JSONObject objRoom){
+        this();
+        JSONArray jsonConnections = (JSONArray) objRoom.get("entrance");
+
+        this.parseConnectionsAsID(jsonConnections);
+
+        this.setID(objRoom.get("id").toString());
+        this.setName(objRoom.get("name").toString());
+        this.setShortDescription(objRoom.get("short_description").toString());
+        this.setLongDescription(objRoom.get("long_description").toString());
+
+        JSONArray loot = (JSONArray) objRoom.get("loot");
+        this.parseLoot(adv.getItemsMapID(), loot);
+    }
+
+    /**
+     * Connects rooms using room IDs. Intended as a temporary step before converting to room obj
+     * @param objEntrances
+     */
+    private void parseConnectionsAsID(JSONArray objEntrances){
+        for (Object conn : objEntrances){
+        JSONObject c = (JSONObject) conn;
+        this.setConnectedRoomAsID(c.get("dir").toString(),c.get("id").toString());
+        }
+    }
+
+      /**
+     * Populates room item list with items from JSONArray
+     * @param itemsMap Hashmap mapping item IDs to item objects
+     * @param objLoot JSONArray containing items
+     */
+    private void parseLoot(HashMap<String,Item> itemsMap, JSONArray objLoot){
+        if (objLoot!=null) {
+            for (Object i : objLoot) {
+                JSONObject item = (JSONObject) i;
+                this.addItem(itemsMap.get(item.get("id").toString()));
+            }
+        }
     }
 
     @Override
     public final String toString(){
-      return (name + "("+id+"): "+shortDescription);
+      return (getName().toUpperCase() + ". "+getShortDescription());
     }
 
     /**
@@ -37,7 +80,7 @@ public class Room implements java.io.Serializable{
 
     /**
      * 
-     * @param newName
+     * @param newName New room name
      * @return Item object with specified name
      */
     public final Item findItem(String newName){
@@ -46,7 +89,7 @@ public class Room implements java.io.Serializable{
 
     /**
      * 
-     * @param newName
+     * @param newName Item name
      * @return Whether or not the room contains this item
      */
     public final boolean containsItem(String newName){
@@ -144,7 +187,7 @@ public class Room implements java.io.Serializable{
      * @param connectionDir
      * @param connectionID
      */
-    public final void setConnectedRoom(String connectionDir, String connectionID){
+    public final void setConnectedRoomAsID(String connectionDir, String connectionID){
         connections.put(connectionDir,connectionID);
     }
 
@@ -154,7 +197,7 @@ public class Room implements java.io.Serializable{
 
     /**
      * 
-     * @param newID
+     * @param newID Room ID
      */
     public final void setID(String newID){
         this.id=newID;
@@ -173,7 +216,7 @@ public class Room implements java.io.Serializable{
      * @param item
      */
     public final void removeItem(Item item){
-      items.remove(items.indexOf(item));
+      items.remove(item);
       itemsName.remove(item.getName());
     }
 }

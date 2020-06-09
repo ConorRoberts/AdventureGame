@@ -4,7 +4,7 @@
       {
         "id": 100,
         "name": "the living room",
-        "short_description": "The living room. Why go anywhere else? Just stop here :)",
+        "short_description": "Why go anywhere else? Just stop here :)",
         "long_description": "A room with a few really cool couches, a carpet, and pictures of my really cool friend Geoff.",
         "entrance": [
           {
@@ -20,7 +20,7 @@
       {
         "id": 101,
         "name": "the kitchen",
-        "short_description": "The kitchen with a stove.",
+        "short_description": "kitchen with a stove.",
         "long_description": "Somewhere people probably cook food. Who knows?",
         "entrance": [
           {
@@ -44,7 +44,7 @@
       {
         "id": 102,
         "name": "the bathroom",
-        "short_description": "The bathroom",
+        "short_description": "It's a bathroom",
         "long_description": "There is a little toilet, a sink, and a shower with a really fantastic curtain",
         "entrance": [
           {

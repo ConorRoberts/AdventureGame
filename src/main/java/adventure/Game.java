@@ -1,36 +1,34 @@
 package adventure;
 
-import java.util.Map;
-import java.util.Scanner;
-import java.io.FileReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Map;
+import java.util.Scanner;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 public class Game implements java.io.Serializable{
 
   private static final long serialVersionUID = -9064936473102319459L;
-  private Parser parser = new Parser();
+  private final Parser parser = new Parser();
   private Adventure adventure;
-  private Scanner sc = new Scanner(System.in);
+  private final Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args){
         Game game = new Game();
         String userInput=null;
         game.startup(args);
         do{
-          System.out.println("Room: "+game.adventure.getPlayer().getCurrentRoom().getShortDescription());
+          System.out.println("Room: "+game.adventure.getCurrentRoom().toString());
           game.printRoomItems(game.adventure.getPlayer().getCurrentRoom());
+          System.out.print("Command: ");
           userInput = game.sc.nextLine();
           try{
             Command command = game.parseCommand(userInput);
@@ -40,45 +38,52 @@ public class Game implements java.io.Serializable{
           }
         }while(!userInput.equals("quit"));
 
-        System.out.println("Would you like to save? (Y/N)");
-        userInput=game.sc.nextLine();
-        game.handleSave(userInput,game);
+        game.handleSave(game.sc,game);
         game.sc.close();
     }
 
-    private void handleSave(String input, Game game){
+    private void handleSave(Scanner theScanner, Game game){
+      System.out.print("Would you like to save (Y/N)? ");
+      String input=theScanner.nextLine();
       if (input.equals("Y")){
-        System.out.println("Enter a file name: ");
-        input=game.sc.nextLine();
+        System.out.print("Enter a file name: ");
+        input=theScanner.nextLine();
         game.save(input);
       }
     }
 
+    private void customFatalError(int code, String reason){
+      System.out.println(reason);
+      System.exit(code);
+    }
+
+  /**
+   * 
+   * @param args
+   */
     private void startup(String[] args){
-        Game.printWelcome();
-        InputStream inputStream;
-        if (args.length==2){
-          if (args[0].equals("-l")){ //Load game save
-            restore(args[1]);
-          }else if(args[0].equals("-a")){ //Load adventure json
-            try{
-              inputStream = Game.class.getClassLoader().getResourceAsStream(args[1]);
-              this.adventure=this.generateAdventure(this.loadAdventureJson(inputStream));
-            }catch(Exception e){
-              System.out.println(e);
-            }
-          }
+      InputStream inputStream;
+      if (args.length==2) {
+        if (args[0].equals("-l")) { //Load game save
+          restore(args[1]);
+        } else if(args[0].equals("-a")) { //Load adventure json
+          this.adventure = generateAdventure(loadAdventureJson(args[1]));
         }
+      }else{
+        inputStream=Game.class.getClassLoader().getResourceAsStream("default.json");
+        this.adventure = generateAdventure(loadAdventureJson(inputStream));
+      }
+      printWelcome(adventure);
     }
 
     private Command parseCommand(String cmd) throws InvalidCommandException{
-      return parser.parseUserInput(cmd);
+      return parser.parseUserCommand(cmd);
     }
 
-    private static void printWelcome(){
-      System.out.println("************************************");
-      System.out.println("    Hello! Welcome to Adventure.");
-      System.out.println("************************************");
+    private static void printWelcome(Adventure theAdventure){
+      System.out.println("******************************************************");
+      System.out.println("    Hello "+theAdventure.getPlayer().getName()+"! Welcome to Adventure.");
+      System.out.println("******************************************************");
     }
 
     private static void printHelp(){
@@ -106,12 +111,16 @@ public class Game implements java.io.Serializable{
       }
     }
 
+    /**
+     * Operation for "inventory" command
+     * @param cmd Command object
+     */
     private void commandInventory(Command cmd){
       Player player = adventure.getPlayer();
       if (player.getInventory().isEmpty()){
         System.out.println("--Inventory is empty--");
       }else{
-        System.out.println("--Inventory--");
+        System.out.println("--"+player.getName()+"'s Inventory--");
         for (Item i : player.getInventory()){
           System.out.println("\t"+i.getName());
         }
@@ -120,13 +129,18 @@ public class Game implements java.io.Serializable{
 
     private void printRoomItems(Room room){
       if (!room.listItems().isEmpty()){
-        System.out.println("--Items contained here--");
+        System.out.println("--Items Here--");
         for (Item i : room.listItems()){
           System.out.println("\t"+i.getName());
         }
       }
     }
 
+    /**
+     * Operation for "take" command
+     * @param cmd
+     * @throws InvalidCommandException
+     */
     private void commandTake(Command cmd) throws InvalidCommandException{
       Player player = adventure.getPlayer();
       Room current=player.getCurrentRoom();
@@ -138,7 +152,12 @@ public class Game implements java.io.Serializable{
         throw new InvalidCommandException();
       }
     }
-
+     
+    /**
+     * Operation for "drop" command
+     * @param cmd Command object
+     * @throws InvalidCommandException
+     */
     private void commandDrop(Command cmd) throws InvalidCommandException{
       Player player = adventure.getPlayer();
       Item toDrop = player.findItem(cmd.getNoun());
@@ -150,10 +169,21 @@ public class Game implements java.io.Serializable{
       }
     }
 
+    /**
+     * Operation for "look" command
+     * Allows user to look at room/inventory items
+     * @param cmd Command object
+     * @throws InvalidCommandException Invalid command
+     */
     private void commandLook(Command cmd) throws InvalidCommandException{
-      Room currentRoom = adventure.getPlayer().getCurrentRoom();
+      Room currentRoom = adventure.getCurrentRoom();
+      Player player=adventure.getPlayer();
       if (cmd.hasSecondWord() && currentRoom.containsItem(cmd.getNoun())) {
-        System.out.println(currentRoom.findItem(cmd.getNoun()).getLongDescription());
+        Item theItem = currentRoom.findItem(cmd.getNoun());
+        System.out.println(theItem.toString());
+      }else if (cmd.hasSecondWord() && player.hasItem(cmd.getNoun())) {
+          Item theItem = player.findItem(cmd.getNoun());
+          System.out.println(theItem.toString());
       }else if(!cmd.hasSecondWord()){
         System.out.println(adventure.getCurrentRoomDescription());
       }else{
@@ -161,6 +191,11 @@ public class Game implements java.io.Serializable{
       }
     }
 
+    /**
+     * Operation for "go" command
+     * @param cmd Command object
+     * @throws InvalidCommandException Invalid command
+     */
     private void commandGo(Command cmd) throws InvalidCommandException{
       Room currentRoom = adventure.getPlayer().getCurrentRoom();
       if (Command.listDirections().contains(cmd.getNoun()) && currentRoom.hasConnection(cmd.getNoun())){
@@ -184,24 +219,22 @@ public class Game implements java.io.Serializable{
 
         fileStream.close();
         objectStream.close();
-
-      }catch(IOException e){
-        System.out.println(e);
+      }catch(Exception e){
+        System.out.println("Error - Could not save game to file");
       }
     }
 
     /**
-     * 
-     * @param fileName
+     * Restore save game
+     * @param fileName Name of game save
      */
     public void restore(String fileName){
-      try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName)); ){ 
-        adventure = (Adventure) in.readObject(); 
-      }catch(IOException e){ 
-        System.out.println(e); 
-      }catch(ClassNotFoundException e){ 
-        System.out.println(e); 
-      } 
+      try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName)); ){
+        adventure = (Adventure) in.readObject();
+        adventure.getPlayer().setGameSaveName(fileName);
+      }catch(Exception e) {
+        customFatalError(0,"Error - Could not open game save.");
+      }
     } 
 
     /**
@@ -214,17 +247,13 @@ public class Game implements java.io.Serializable{
         Object file=new JSONParser().parse(new InputStreamReader(inputStream));
 
         JSONObject fileJson=(JSONObject) file;
-        JSONObject newAdventure = (JSONObject) fileJson.get("adventure");
 
-        return newAdventure;
+        return (JSONObject) fileJson.get("adventure");
 
-    }catch (FileNotFoundException e){
+      }catch (Exception e){
+        customFatalError(0,"Error - Could not load adventure.json from stream");
         return null;
-    }catch(IOException e){
-        return null;
-    }catch(ParseException e){
-        return null;
-    }
+      }
     }
 
     /**
@@ -233,76 +262,50 @@ public class Game implements java.io.Serializable{
     */
     public final JSONObject loadAdventureJson(String filename){
         try{
-            Object file=new JSONParser().parse(new FileReader(filename));
+          Object file=new JSONParser().parse(new FileReader(filename));
 
-            JSONObject fileJson=(JSONObject) file;
-            JSONObject newAdventure = (JSONObject) fileJson.get("adventure");
-
-            return newAdventure;
-
-        }catch (FileNotFoundException e){
-            return null;
-        }catch(IOException e){
-            return null;
-        }catch(ParseException e){
-            return null;
+          JSONObject fileJson=(JSONObject) file;
+          return (JSONObject) fileJson.get("adventure");
+        }catch (Exception e){
+          customFatalError(1,"Error - Could not load adventure.json from path");
+          return null;
         }
     }
 
+    /**
+     * Adds items to Adventure's list of items
+     * @param newAdventure Adventure to be modified
+     * @param objItems JSONArray of items
+     */
   private void parseItems(Adventure newAdventure, JSONArray objItems){
-    for (Object i : objItems){
-      JSONObject current = (JSONObject) i;
+    for (Object objCurrent : objItems){
+      JSONObject i = (JSONObject) objCurrent;
 
-      Item item = new Item();
+      String name=i.get("name").toString();
+      String id = i.get("id").toString();
+      String desc = i.get("desc").toString();
 
-      item.setID(current.get("id").toString());
-      item.setName(current.get("name").toString());
-      item.setLongDescription(current.get("desc").toString());
-
-      newAdventure.addItem(item);
+      newAdventure.addItem(new Item(name,id,desc));
     }
   }
 
-  private void parseLoot(Adventure newAdventure, Room room, JSONArray objLoot){
-    if (objLoot!=null){
-      for (Object i : objLoot){
-        JSONObject item = (JSONObject) i;
-        room.addItem(newAdventure.findItemID(item.get("id").toString()));
-      }
-    }
-  }
 
-  private void parseConnections(Room room, JSONArray objEntrances){
-    for (Object conn : objEntrances){
-      JSONObject c = (JSONObject) conn;
-      room.setConnectedRoom(c.get("dir").toString(),c.get("id").toString());
-    }
-  }
-
+  /**
+   * Converts JSONArray into individual room objects
+   * @param newAdventure Adventure object
+   * @param objRooms JSONArray of rooms
+   */
   private void parseRooms(Adventure newAdventure, JSONArray objRooms){
     for (Object obj : objRooms){
-      JSONObject r = (JSONObject) obj;
-
-      Room room  = new Room();
-
-      JSONArray connections = (JSONArray) r.get("entrance");
-
-      parseConnections(room, connections);
-
-      room.setID(r.get("id").toString());
-      room.setName(r.get("name").toString());
-      room.setShortDescription(r.get("short_description").toString());
-      room.setLongDescription(r.get("long_description").toString());
-
-      JSONArray loot = (JSONArray) r.get("loot");
-
-      parseLoot(newAdventure, room, loot);
-
-      newAdventure.addRoom(room);
+      newAdventure.addRoom(new Room(newAdventure, (JSONObject) obj));
     }
   }
 
-  private void parseConnectionsAsRooms(Adventure newAdventure){
+  /**
+   * Converts the list of room IDs to actual room objects
+   * @param newAdventure Adventure object
+   */
+  private void parseConnectionsAsRoom(Adventure newAdventure){
     for(Room r : newAdventure.listAllRooms()){
       for (Map.Entry<String,String> m : r.getConnectedRoomsList().entrySet()) {
         r.setConnectedRoomAsRoom(m.getKey(),newAdventure.findRoom(m.getValue()));
@@ -312,20 +315,17 @@ public class Game implements java.io.Serializable{
 
   /**
   * @param obj a JSONObject pointing to the first level into an adventure.json
-  * @return completed Adventure object
+  * @return complete Adventure object
   */
     public final Adventure generateAdventure(JSONObject obj) {
-        Adventure newAdventure = new Adventure();
+      Adventure newAdventure = new Adventure();
 
-        JSONArray rooms = (JSONArray) obj.get("room");
-        JSONArray items = (JSONArray) obj.get("item");
+      parseItems(newAdventure, (JSONArray) obj.get("item"));
+      parseRooms(newAdventure, (JSONArray) obj.get("room"));
 
-        parseItems(newAdventure, items);
-        parseRooms(newAdventure, rooms);
+      parseConnectionsAsRoom(newAdventure);
 
-        parseConnectionsAsRooms(newAdventure);
-
-        newAdventure.getPlayer().setCurrentRoom(newAdventure.listAllRooms().get(0));
-        return newAdventure;
+      newAdventure.getPlayer().setCurrentRoom(newAdventure.listAllRooms().get(0));
+      return newAdventure;
     }
 }

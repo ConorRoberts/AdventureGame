@@ -20,7 +20,11 @@ public class Adventure implements java.io.Serializable{
       roomsID = new HashMap<String,Room>();
       itemsID = new HashMap<String,Item>();
       itemsName = new HashMap<String,Item>();
-      player=new Player();
+      player=new Player("Player");
+    }
+
+    public final HashMap<String,Item> getItemsMapID(){
+      return itemsID;
     }
 
     /**
@@ -28,7 +32,7 @@ public class Adventure implements java.io.Serializable{
      */
     @Override
     public final String toString(){
-      return ("useless method");
+      return ("Adventure with "+listAllRooms().size()+" rooms and "+listAllItems().size()+"items");
     }
 
     /**
@@ -51,7 +55,7 @@ public class Adventure implements java.io.Serializable{
     /**
     * @return List of items in player's inventory
     */
-    public final ArrayList<Item> listPlayerItems(){
+    public final ArrayList<Item> listInventory(){
       return player.getInventory();
     }
 
@@ -73,7 +77,7 @@ public class Adventure implements java.io.Serializable{
     * @return Current room description
     */
     public final String getCurrentRoomDescription(){
-        return player.getCurrentRoom().getShortDescription();
+        return player.getCurrentRoom().getLongDescription();
     }
 
     /**
@@ -86,7 +90,7 @@ public class Adventure implements java.io.Serializable{
     
     /**
      * Adds room object to adventure
-     * @param room
+     * @param room Room object
      */
     public final void addRoom(Room room){
       this.rooms.add(room);
@@ -101,24 +105,6 @@ public class Adventure implements java.io.Serializable{
       this.items.add(item);
       this.itemsID.put(item.getID(),item);
       this.itemsName.put(item.getName(),item);
-    }
-
-    /**
-    * Search for an item based on ID
-    * @param id Item ID
-    * @return Item object with given ID
-    */
-    public final Item findItemID(String id){
-      return itemsID.get(id);
-    }
-
-    /**
-    * Search for an item based on name
-    * @param name Item name
-    * @return Item object with given name
-    */
-    public final Item findItemName(String name){
-      return itemsName.get(name);
     }
 
     /**

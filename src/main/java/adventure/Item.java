@@ -13,12 +13,18 @@ public class Item implements java.io.Serializable{
       
     }
 
+    public Item(String itemName, String itemID, String itemDesc){
+        this.setName(itemName);
+        this.setID(itemID);
+        this.setLongDescription(itemDesc);
+    }
+
     /**
      * @return A string formatted version of the object
      */
     @Override
     public final String toString(){
-      return (name + "("+id+"): "+description);
+      return (name.toUpperCase()+": "+description);
     }
 
     /**
