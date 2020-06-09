@@ -169,10 +169,6 @@ public class Room implements java.io.Serializable{
         return connections;
     }
 
-    public final HashMap<String,Room> getConnectedRoomsListTwo(){
-        return connectedRooms;
-    }
-
     /**
      * 
      * @param dir

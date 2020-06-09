@@ -7,15 +7,15 @@ public class Player implements java.io.Serializable{
 
   private static final long serialVersionUID = -9064936473102319459L;
 
-  private String name;
-  private ArrayList<Item> items;
+  private String name="";
+  private ArrayList<Item> inventory;
   private HashMap<String,Item> itemsMap;
   private Room currentRoom;
-  private String saveName;
+  private String gameSaveName="";
 
   public Player(){
-    items= new ArrayList<Item>();
-    itemsMap = new HashMap<String, Item>();
+    setInventory();
+    setItemsMap();
   }
 
   public Player(String newName){
@@ -38,6 +38,20 @@ public class Player implements java.io.Serializable{
   }
 
   /**
+   * Initializes itemsMap
+   */
+  public void setItemsMap(){
+    itemsMap=new HashMap<>();
+  }
+
+  /**
+   * Initializes inventory
+   */
+  public void setInventory(){
+    inventory=new ArrayList<>();
+  }
+
+  /**
    * Useful to check if findItem will be null
    * @param itemName Item object name
    * @return Whether the item exists in player inventory
@@ -51,7 +65,7 @@ public class Player implements java.io.Serializable{
    * @return An arraylist of the player's inventory
    */
   public final ArrayList<Item> getInventory(){
-    return items;
+      return inventory;
   }
 
   /**
@@ -59,7 +73,7 @@ public class Player implements java.io.Serializable{
    * @param item
    */
   public final void take(Item item){
-    items.add(item);
+    inventory.add(item);
     itemsMap.put(item.getName(),item);
     currentRoom.removeItem(item);
   }
@@ -70,13 +84,13 @@ public class Player implements java.io.Serializable{
    */
   public final void drop(Item item){
     currentRoom.addItem(item);
-    items.remove(item);
+    inventory.remove(item);
     itemsMap.remove(item.getName());
   }
 
   /**
    * Return player name
-   * @return Then player's name
+   * @return The player's name
    */
   public final String getName(){
     return name;
@@ -112,11 +126,11 @@ public class Player implements java.io.Serializable{
    * @return Nothing useful lol
    */
   public final String getSaveGameName(){
-    return saveName;
+    return gameSaveName;
   }
 
   public final void setGameSaveName(String newSaveName){
-    saveName=newSaveName;
+    gameSaveName=newSaveName;
   }
 
 }

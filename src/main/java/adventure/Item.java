@@ -4,19 +4,19 @@ public class Item implements java.io.Serializable{
 
     private static final long serialVersionUID = -9064936473102319459L;
 
-    private String description;
+    private String longDescription;
     private String name;
-    private Room room;
-    private String id;
+    private String ID;
+    private Room containingRoom;
 
     public Item(){
-      
+      this(null,null,null);
     }
 
     public Item(String itemName, String itemID, String itemDesc){
-        this.setName(itemName);
-        this.setID(itemID);
-        this.setLongDescription(itemDesc);
+        setName(itemName);
+        setID(itemID);
+        setLongDescription(itemDesc);
     }
 
     /**
@@ -24,14 +24,14 @@ public class Item implements java.io.Serializable{
      */
     @Override
     public final String toString(){
-      return (name.toUpperCase()+": "+description);
+      return (getName().toUpperCase()+": "+getLongDescription());
     }
 
     /**
      * @return Name of item
      */
     public final String getName(){
-        return this.name;
+        return name;
     }
 
     /**
@@ -39,7 +39,23 @@ public class Item implements java.io.Serializable{
      * @param newName
      */
     public final void setName(String newName){
-        this.name=newName;
+        name=newName;
+    }
+
+    /**
+     *
+     * @return Room containing the item
+     */
+    public final Room getContainingRoom(){
+        return containingRoom;
+    }
+
+    /**
+     *
+     * @param newRoom
+     */
+    public final void setContainingRoom(Room newRoom){
+        containingRoom=newRoom;
     }
 
     /**
@@ -47,7 +63,7 @@ public class Item implements java.io.Serializable{
      * @return Item long description
      */
     public final String getLongDescription(){
-        return this.description;
+        return longDescription;
     }
 
     /**
@@ -55,23 +71,7 @@ public class Item implements java.io.Serializable{
      * @param newDescription
      */
     public final void setLongDescription(String newDescription){
-      this.description=newDescription;
-    }
-
-    /**
-     * 
-     * @return Room containing the item
-     */
-    public final Room getContainingRoom(){
-        return this.room;
-    }
-
-    /**
-     * 
-     * @param newRoom
-     */
-    public final void setContainingRoom(Room newRoom){
-        this.room=newRoom;
+      longDescription=newDescription;
     }
 
     /**
@@ -79,7 +79,7 @@ public class Item implements java.io.Serializable{
      * @param newID
      */
     public final void setID(String newID){
-        this.id=newID;
+        ID=newID;
     }
 
     /**
@@ -87,7 +87,7 @@ public class Item implements java.io.Serializable{
      * @return Item ID
      */
     public final String getID(){
-        return this.id;
+        return ID;
     }
 
 }

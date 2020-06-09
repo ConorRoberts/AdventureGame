@@ -15,12 +15,12 @@ public class Adventure implements java.io.Serializable{
     private HashMap<String,Item> itemsName;
 
     public Adventure(){
-      rooms = new ArrayList<Room>();
-      items= new ArrayList<Item>();
-      roomsID = new HashMap<String,Room>();
-      itemsID = new HashMap<String,Item>();
-      itemsName = new HashMap<String,Item>();
-      player=new Player("Player");
+      rooms = new ArrayList<>();
+      items= new ArrayList<>();
+      roomsID = new HashMap<>();
+      itemsID = new HashMap<>();
+      itemsName = new HashMap<>();
+      setPlayer("Player");
     }
 
     public final HashMap<String,Item> getItemsMapID(){
@@ -36,20 +36,15 @@ public class Adventure implements java.io.Serializable{
     }
 
     /**
-    * Checks whether the input name is part of the item list
-    * @param name Item name to check
-    * @return Whether the given name is a valid item
-    */
-    public final boolean isItem(String name){
-      return itemsName.containsKey(name);
-    }
-
-    /**
      * Gives access to the player
      * @return Player object
      */
-    public Player getPlayer(){
+    public final Player getPlayer(){
       return player;
+    }
+
+    public final void setPlayer(String playerName){
+      player=new Player(playerName);
     }
 
     /**

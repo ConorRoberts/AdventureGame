@@ -14,6 +14,11 @@ public class Parser{
 
   }
 
+  @Override
+  public final String toString(){
+    return ("This is a parser");
+  }
+
   /**
   * Parses a given string into a valid command object
   * @param input Line of text to parse

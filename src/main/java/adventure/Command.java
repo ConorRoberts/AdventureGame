@@ -17,6 +17,11 @@ public class Command {
       return validDirections;
     }
 
+    @Override
+    public final String toString(){
+        return ("Action: "+getActionWord()+", Noun: "+getNoun());
+    }
+
   /**
      * Create a command object with default values.
      * both instance variables are set to null
@@ -50,8 +55,8 @@ public class Command {
         // is a legitimate second word for the command
         // throw an exception if not
         if (validActions.contains(command)){
-          this.action = command;
-          this.noun = what;
+          setAction(command);
+          setNoun(what);
         }else{
           throw new InvalidCommandException();
         }
@@ -81,5 +86,21 @@ public class Command {
      */
     public boolean hasSecondWord() {
         return (noun != null);
+    }
+
+    /**
+     *
+     * @param word
+     */
+    public void setAction(String word){
+        action=word;
+    }
+
+    /**
+     *
+     * @param word
+     */
+    public void setNoun(String word){
+        noun=word;
     }
 }
