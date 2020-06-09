@@ -106,7 +106,7 @@ public class Game implements java.io.Serializable{
         commandTake(cmd);
       }else if(cmd.getActionWord().equals("drop") && cmd.hasSecondWord()){
         commandDrop(cmd);
-      }else{
+      }else if(!cmd.getActionWord().equals("quit")){
         throw new InvalidCommandException();
       }
     }
