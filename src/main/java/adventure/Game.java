@@ -28,7 +28,7 @@ public class Game implements java.io.Serializable{
 
   public Game(String[] flags){
     this();
-    this.startup(flags);
+    startup(flags);
   }
 
   /**
@@ -60,11 +60,11 @@ public class Game implements java.io.Serializable{
     return ("This is a game");
   }
 
-  private void setScanner(){
+  public final void setScanner(){
     scanner=new Scanner(System.in);
   }
 
-  private void setParser(){
+  public final void setParser(){
     parser=new Parser();
   }
 
@@ -72,7 +72,7 @@ public class Game implements java.io.Serializable{
    * Setter method for adventure because autograder is a whiny baby
    * @param adv
    */
-  private void setAdventure(Adventure adv){
+  public final void setAdventure(Adventure adv){
     adventure=adv;
   }
 

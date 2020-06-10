@@ -12,32 +12,48 @@ public class Room implements java.io.Serializable{
     private String name;
     private String longDescription;
     private String shortDescription;
-    private String id;
+    private String ID;
     private ArrayList<Item> items;
     private HashMap<String,String> connections;
     private HashMap<String,Room> connectedRooms;
     private HashMap<String, Item> itemsName;
 
-    public Room(){
-        items = new ArrayList<>();
-        connections= new HashMap<>();
+    public void setItemsName(){
         itemsName = new HashMap<>();
-        connectedRooms = new HashMap<>();
+    }
+
+    public void setItems(){
+        items=new ArrayList<>();
+    }
+
+    public void setConnections(){
+        connections=new HashMap<>();
+    }
+
+    public void setConnectedRooms(){
+        connectedRooms=new HashMap<>();
+    }
+
+    public Room(){
+        setItems();
+        setConnections();
+        setConnectedRooms();
+        setItemsName();
     }
 
     public Room(Adventure adv, JSONObject objRoom){
         this();
         JSONArray jsonConnections = (JSONArray) objRoom.get("entrance");
 
-        this.parseConnectionsAsID(jsonConnections);
+        parseConnectionsAsID(jsonConnections);
 
-        this.setID(objRoom.get("id").toString());
-        this.setName(objRoom.get("name").toString());
-        this.setShortDescription(objRoom.get("short_description").toString());
-        this.setLongDescription(objRoom.get("long_description").toString());
+        setID(objRoom.get("id").toString());
+        setName(objRoom.get("name").toString());
+        setShortDescription(objRoom.get("short_description").toString());
+        setLongDescription(objRoom.get("long_description").toString());
 
         JSONArray loot = (JSONArray) objRoom.get("loot");
-        this.parseLoot(adv.getItemsMapID(), loot);
+        parseLoot(adv.getItemsMapID(), loot);
     }
 
     /**
@@ -60,7 +76,9 @@ public class Room implements java.io.Serializable{
         if (objLoot!=null) {
             for (Object i : objLoot) {
                 JSONObject item = (JSONObject) i;
-                this.addItem(itemsMap.get(item.get("id").toString()));
+                Item objItem = itemsMap.get(item.get("id").toString());
+                objItem.setContainingRoom(this);
+                addItem(objItem);
             }
         }
     }
@@ -196,7 +214,7 @@ public class Room implements java.io.Serializable{
      * @param newID Room ID
      */
     public final void setID(String newID){
-        this.id=newID;
+        ID=newID;
     }
 
     /**
@@ -204,7 +222,7 @@ public class Room implements java.io.Serializable{
      * @return Room ID
      */
     public final String getID(){
-        return this.id;
+        return ID;
     }
 
     /**
