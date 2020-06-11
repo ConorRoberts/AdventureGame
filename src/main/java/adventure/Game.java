@@ -7,10 +7,8 @@ import java.io.FileReader;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Map;
 import java.util.Scanner;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -300,60 +298,11 @@ public class Game implements java.io.Serializable{
       }
   }
 
-  /**
-   * Adds items to Adventure's list of items
-   * @param newAdventure Adventure to be modified
-   * @param objItems JSONArray of items
-   */
-private void parseItems(Adventure newAdventure, JSONArray objItems){
-  for (Object objCurrent : objItems){
-    JSONObject i = (JSONObject) objCurrent;
-
-    String name=i.get("name").toString();
-    String id = i.get("id").toString();
-    String desc = i.get("desc").toString();
-
-    newAdventure.addItem(new Item(name,id,desc));
-  }
-}
-
-
-/**
- * Converts JSONArray into individual room objects
- * @param newAdventure Adventure object
- * @param objRooms JSONArray of rooms
- */
-private void parseRooms(Adventure newAdventure, JSONArray objRooms){
-  for (Object obj : objRooms){
-    newAdventure.addRoom(new Room(newAdventure, (JSONObject) obj));
-  }
-}
-
-/**
- * Converts the list of room IDs to actual room objects
- * @param newAdventure Adventure object
- */
-private void parseConnectionsAsRoom(Adventure newAdventure){
-  for(Room r : newAdventure.listAllRooms()){
-    for (Map.Entry<String,String> m : r.getConnectedRoomsList().entrySet()) {
-      r.setConnectedRoomAsRoom(m.getKey(),newAdventure.findRoom(m.getValue()));
-    }
-  }
-}
-
 /**
 * @param obj a JSONObject pointing to the first level into an adventure.json
 * @return complete Adventure object
 */
   public final Adventure generateAdventure(JSONObject obj) {
-    Adventure newAdventure = new Adventure();
-
-    parseItems(newAdventure, (JSONArray) obj.get("item"));
-    parseRooms(newAdventure, (JSONArray) obj.get("room"));
-
-    parseConnectionsAsRoom(newAdventure);
-
-    newAdventure.getPlayer().setCurrentRoom(newAdventure.listAllRooms().get(0));
-    return newAdventure;
+    return (new Adventure(obj));
   }
 }

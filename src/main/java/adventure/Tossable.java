@@ -1,5 +1,5 @@
 package adventure;
 
 public interface Tossable{
-    public String toss();
+    String toss();
 }

@@ -1,18 +1,13 @@
 package adventure;
 
-import java.util.List;
-
 /**
-*
-*
 * @author Conor Roberts
-*
 */
 public class Parser{
 
   private Adventure adventure;
 
-  public void setAdventure (Adventure adv){
+  public final void setAdventure(Adventure adv){
     adventure=adv;
   }
 
@@ -35,7 +30,7 @@ public class Parser{
   * @param input Line of text to parse
   * @return Command object complete with parsed input
   */
-  public Command parseUserCommand(String input) throws InvalidCommandException{ /*TODO Validate noun here*/
+  public final Command parseUserCommand(String input) throws InvalidCommandException{ /*TODO Validate noun here*/
     String[] split = input.split(" ",2);
     String action;
     String noun;
@@ -54,16 +49,15 @@ public class Parser{
   /**
   *  @return A list containing all valid action words
   */
-  public final List<String> allCommands(){
-    return Command.getValidActions();
+  public final String allCommands(){
+    return Command.getValidActions().toString();
   }
 
   /**
    * Method used to validate the noun of a command
-   * @param cmd
-   * @return
+   * @param cmd Command object with validated action
    */
-  public final boolean validNoun(Command cmd, Adventure adv) throws InvalidCommandException{
+  public final void validNoun(Command cmd) throws InvalidCommandException{
     /*Guaranteed to have valid action
     * Actions that need nouns validated
     * go
@@ -77,29 +71,58 @@ public class Parser{
     * */
     String action = cmd.getActionWord();
     String noun = cmd.getNoun();
-    switch(action){
-      case "go":
-        break;
-      case "look":
-        break;
-      case "drop":
-        break;
-      case "take":
-        break;
-      case "read":
-        break;
-      case "toss":
-        break;
-      case "wear":
-        break;
-      case "eat":
-        break;
+    if (action.equals("go")){
+      validateConnection(cmd.getNoun(),adventure);
+    }else if(action.equals("take") && cmd.hasSecondWord()) {
+      validateRoomItem(cmd.getNoun(), adventure);
+    }else if(action.equals("look") && cmd.hasSecondWord()){
+      validateLook(cmd.getNoun(),adventure);
+    }else if (action.equals("eat") || action.equals("wear") || action.equals("read") || action.equals("toss")){
+      validateInventoryItem(cmd.getNoun(), adventure);
+    }else{
+      throw new InvalidCommandException();
     }
-    return false;
   }
 
-  public void validateGo(Command cmd, Adventure adventure) throws InvalidCommandException{
-    if (!adventure.getCurrentRoom().hasConnection(cmd.getNoun())){
+  public final void validateLook(String item, Adventure adv) throws InvalidCommandException{
+    Player player=adventure.getPlayer();
+    if (!adv.getCurrentRoom().containsItem(item) && !player.hasItem(item)){
+      throw new InvalidCommandException();
+    }
+  }
+
+  /**
+   * Checks if there is a connected room in given direction
+   * @param dir Direction letter
+   * @param adv Adventure object
+   * @throws InvalidCommandException Invalid command
+   */
+  public void validateConnection(String dir, Adventure adv) throws InvalidCommandException{
+    if (!adv.getCurrentRoom().hasConnection(dir)){
+      throw new InvalidCommandException();
+    }
+  }
+
+  /**
+   * Checks if item is within inventory
+   * @param item Item name
+   * @param adv Adventure obj
+   * @throws InvalidCommandException Invalid command
+   */
+  public void validateInventoryItem(String item, Adventure adv) throws InvalidCommandException{
+    if(!adv.getPlayer().hasItem(item)){
+      throw new InvalidCommandException();
+    }
+  }
+
+  /**
+   * Checks if item name is within room
+   * @param item Item name
+   * @param adv Adventure object
+   * @throws InvalidCommandException Invalid command
+   */
+  public void validateRoomItem(String item, Adventure adv) throws InvalidCommandException{
+    if(!adv.getCurrentRoom().containsItem(item)){
       throw new InvalidCommandException();
     }
   }

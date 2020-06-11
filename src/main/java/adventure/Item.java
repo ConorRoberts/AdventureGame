@@ -6,7 +6,7 @@ public class Item implements java.io.Serializable{
 
     private String longDescription;
     private String name;
-    private String ID;
+    private String id;
     private Room containingRoom;
 
     public Item(){
@@ -79,7 +79,7 @@ public class Item implements java.io.Serializable{
      * @param newID
      */
     public final void setID(String newID){
-        ID=newID;
+        id=newID;
     }
 
     /**
@@ -87,7 +87,7 @@ public class Item implements java.io.Serializable{
      * @return Item ID
      */
     public final String getID(){
-        return ID;
+        return id;
     }
 
 }

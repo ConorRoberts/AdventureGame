@@ -12,7 +12,7 @@ public class Room implements java.io.Serializable{
     private String name;
     private String longDescription;
     private String shortDescription;
-    private String ID;
+    private String id;
     private ArrayList<Item> items;
     private HashMap<String,String> connectedMapID;
     private HashMap<String,Room> connectedMapRooms;
@@ -61,15 +61,15 @@ public class Room implements java.io.Serializable{
         this.name=newName;
     }
 
-    public void setItemsMapName(){
+    public final void setItemsMapName(){
         itemsMapName = new HashMap<>();
     }
 
-    public void setItems(ArrayList<Item> array){
+    public final void setItems(ArrayList<Item> array){
         items=array;
     }
 
-    public void setConnectedMapID(){
+    public final void setConnectedMapID(){
         connectedMapID=new HashMap<>();
     }
 
@@ -119,7 +119,7 @@ public class Room implements java.io.Serializable{
      * @param newID Room ID
      */
     public final void setID(String newID){
-        ID=newID;
+        id=newID;
     }
 
     /*Helper methods */
@@ -158,7 +158,7 @@ public class Room implements java.io.Serializable{
      * @return Room ID
      */
     public final String getID(){
-        return ID;
+        return id;
     }
 
     /**
