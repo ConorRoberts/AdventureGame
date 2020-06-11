@@ -23,12 +23,12 @@ public class Game implements java.io.Serializable{
 
   public Game(){
     setScanner();
-    setParser();
   }
 
   public Game(String[] flags){
     this();
     startup(flags);
+    setParser();
   }
 
   /**
@@ -37,7 +37,7 @@ public class Game implements java.io.Serializable{
    */
     public static void main(String[] args){
         Game game = new Game(args);
-        String userInput=null;
+        String userInput;
         do{
           System.out.println("Room: "+game.adventure.getCurrentRoom().toString());
           game.printRoomItems(game.adventure.getPlayer().getCurrentRoom());
@@ -65,12 +65,12 @@ public class Game implements java.io.Serializable{
   }
 
   public final void setParser(){
-    parser=new Parser();
+    parser=new Parser(adventure);
   }
 
   /**
    * Setter method for adventure because auto grader is a whiny baby
-   * @param adv
+   * @param adv Adventure object
    */
   public final void setAdventure(Adventure adv){
     adventure=adv;
@@ -87,8 +87,8 @@ public class Game implements java.io.Serializable{
   }
 
   /**
-   * 
-   * @param args
+   * Starts the whole game
+   * @param args Command line arguments
    */
   private void startup(String[] args){
     InputStream inputStream;
@@ -128,7 +128,7 @@ public class Game implements java.io.Serializable{
     }else if(cmd.getActionWord().equals("look")){
       commandLook(cmd);
     }else if(cmd.getActionWord().equals("inventory")){
-      commandInventory(cmd);
+      commandInventory();
     }else if(cmd.getActionWord().equals("help")){
       Game.printHelp();
     }else if(cmd.getActionWord().equals("take") && cmd.hasSecondWord()){
@@ -142,9 +142,8 @@ public class Game implements java.io.Serializable{
 
   /**
    * Operation for "inventory" command
-   * @param cmd Command object
    */
-  private void commandInventory(Command cmd){
+  private void commandInventory(){
     Player player = adventure.getPlayer();
     if (player.getInventory().isEmpty()){
       System.out.println("--Inventory is empty--");
@@ -156,6 +155,10 @@ public class Game implements java.io.Serializable{
     }
   }
 
+  /**
+   * Prints items in room
+   * @param room Room object
+   */
   private void printRoomItems(Room room){
     if (!room.listItems().isEmpty()){
       System.out.println("--Items Here--");
@@ -167,8 +170,8 @@ public class Game implements java.io.Serializable{
 
   /**
    * Operation for "take" command
-   * @param cmd
-   * @throws InvalidCommandException
+   * @param cmd Command object
+   * @throws InvalidCommandException Invalid command
    */
   private void commandTake(Command cmd) throws InvalidCommandException{
     Player player = adventure.getPlayer();
@@ -185,7 +188,7 @@ public class Game implements java.io.Serializable{
   /**
    * Operation for "drop" command
    * @param cmd Command object
-   * @throws InvalidCommandException
+   * @throws InvalidCommandException Invalid command
    */
   private void commandDrop(Command cmd) throws InvalidCommandException{
     Player player = adventure.getPlayer();
@@ -227,7 +230,7 @@ public class Game implements java.io.Serializable{
    */
   private void commandGo(Command cmd) throws InvalidCommandException{
     Room currentRoom = adventure.getPlayer().getCurrentRoom();
-    if (Command.listDirections().contains(cmd.getNoun()) && currentRoom.hasConnection(cmd.getNoun())){
+    if (Command.getValidDirections().contains(cmd.getNoun()) && currentRoom.hasConnection(cmd.getNoun())){
       Room newRoom = currentRoom.getConnectedRoom(cmd.getNoun());
       adventure.getPlayer().setCurrentRoom(newRoom);
     }else{
@@ -240,11 +243,10 @@ public class Game implements java.io.Serializable{
   * @param fileName Name of output file
   */
   public void save(String fileName){
-    try(ObjectOutputStream objectStream = new ObjectOutputStream(new FileOutputStream(fileName));){
+    try(ObjectOutputStream objectStream = new ObjectOutputStream(new FileOutputStream(fileName))){
 
       objectStream.writeObject(adventure);
 
-      objectStream.close();
     }catch(Exception e){
       System.out.println("Error - Could not save game to file");
     }
@@ -255,7 +257,7 @@ public class Game implements java.io.Serializable{
    * @param fileName Name of game save
    */
   public void restore(String fileName){
-    try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName)); ){
+    try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))){
       setAdventure((Adventure) in.readObject());
       adventure.getPlayer().setGameSaveName(fileName);
     }catch(Exception e) {

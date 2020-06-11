@@ -1,4 +1,5 @@
 package adventure;
 
-public interface Edible {
+public interface Edible{
+    public String eat();
 }

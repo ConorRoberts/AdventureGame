@@ -1,4 +1,4 @@
 package adventure;
 
-public class Food {
+public class Food extends Item{
 }

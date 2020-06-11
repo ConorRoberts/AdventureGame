@@ -4,16 +4,16 @@ import java.util.List;
 import java.util.Arrays;
 
 public class Command {
-    private static List<String> validActions = Arrays.asList("go", "look", "quit","take","inventory","help","drop");
-    private static List<String> validDirections = Arrays.asList("up","down","N","E","S","W");
+    private static final List<String> validActions = Arrays.asList("go", "look", "quit","take","inventory","help","drop", "eat", "wear", "toss", "read");
+    private static final List<String> validDirections = Arrays.asList("up","down","N","E","S","W");
     private String action;
     private String noun;
 
-    public static List<String> listActions(){
+    public static List<String> getValidActions(){
       return validActions;
     }
 
-    public static List<String> listDirections(){
+    public static List<String> getValidDirections(){
       return validDirections;
     }
 

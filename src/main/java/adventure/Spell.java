@@ -1,4 +1,7 @@
 package adventure;
 
-public class Spell {
+public class Spell implements Readable{
+    public String read(){
+        return null;
+    }
 }
