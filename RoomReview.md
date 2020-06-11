@@ -1,0 +1,5 @@
+| Method Sig                              | Responsibility                    | Instance Vars Used | Other Class Methods Called                                              | Objects Used With Method Calls | Lines |
+|-----------------------------------------|-----------------------------------|--------------------|-------------------------------------------------------------------------|--------------------------------|-------|
+| Room()                                  | initialize                        |                    | setItems() setConnectedMapID() setConnectedMapRooms() setItemsMapName() | Adventure JSONObject JSONArray | ?     |
+| Room(Adventure adv, JSONObject objRoom) | Convert JSONObject to Room object |                    |                                                                         |                                |       |
+|                                         |                                   |                    |                                                                         |                                |       |
