@@ -14,31 +14,26 @@ public class Room implements java.io.Serializable{
     private String shortDescription;
     private String ID;
     private ArrayList<Item> items;
-    private HashMap<String,String> connections;
-    private HashMap<String,Room> connectedRooms;
-    private HashMap<String, Item> itemsName;
+    private HashMap<String,String> connectedMapID;
+    private HashMap<String,Room> connectedMapRooms;
+    private HashMap<String, Item> itemsMapName;
 
-    public void setItemsName(){
-        itemsName = new HashMap<>();
+    /**
+     * Returns a short description about the room
+     * @return Formatted room description
+     */
+    @Override
+    public final String toString(){
+      return (getName().toUpperCase() + ". "+getShortDescription());
     }
 
-    public void setItems(){
-        items=new ArrayList<>();
-    }
-
-    public void setConnections(){
-        connections=new HashMap<>();
-    }
-
-    public void setConnectedRooms(){
-        connectedRooms=new HashMap<>();
-    }
+    /*Constructors */
 
     public Room(){
-        setItems();
-        setConnections();
-        setConnectedRooms();
-        setItemsName();
+        setItems(new ArrayList<Item>());
+        setConnectedMapID();
+        setConnectedMapRooms();
+        setItemsMapName();
     }
 
     public Room(Adventure adv, JSONObject objRoom){
@@ -55,6 +50,79 @@ public class Room implements java.io.Serializable{
         JSONArray loot = (JSONArray) objRoom.get("loot");
         parseLoot(adv.getItemsMapID(), loot);
     }
+
+    /*Simple Setters */
+
+    /**
+     * 
+     * @param newName
+     */
+    public final void setName(String newName){
+        this.name=newName;
+    }
+
+    public void setItemsMapName(){
+        itemsMapName = new HashMap<>();
+    }
+
+    public void setItems(ArrayList<Item> array){
+        items=array;
+    }
+
+    public void setConnectedMapID(){
+        connectedMapID=new HashMap<>();
+    }
+
+    /**
+     * Setter the map connecting room names to objects
+     */
+    public void setConnectedMapRooms(){
+        connectedMapRooms=new HashMap<>();
+    }
+
+    /**
+    * Setter for room long description
+    * @param newDescription Description for room
+    */
+    public final void setLongDescription(String newDescription){
+        longDescription=newDescription;
+    }
+    
+    /**
+     * Sets room short description
+     * @param newDescription New short room description
+     */
+    public final void setShortDescription(String newDescription){
+        shortDescription=newDescription;
+    }
+    
+    /**
+     * Adds a connected room ID
+     * @param connectionDir
+     * @param connectionID
+     */
+    public final void setConnectedRoomAsID(String connectionDir, String connectionID){
+        connectedMapID.put(connectionDir,connectionID);
+    }
+
+    /**
+     * Adds a connected room object
+     * @param connectionDir
+     * @param room
+     */
+    public final void setConnectedRoomAsRoom(String connectionDir, Room room){
+        connectedMapRooms.put(connectionDir,room);
+    }
+
+    /**
+     * Sets room ID
+     * @param newID Room ID
+     */
+    public final void setID(String newID){
+        ID=newID;
+    }
+
+    /*Helper methods */
 
     /**
      * Connects rooms using room IDs. Intended as a temporary step before converting to room obj
@@ -82,143 +150,11 @@ public class Room implements java.io.Serializable{
             }
         }
     }
-
-    @Override
-    public final String toString(){
-      return (getName().toUpperCase() + ". "+getShortDescription());
-    }
+    
+    /*Simple Getters */
 
     /**
-     * 
-     * @return Arraylist of items contained in room
-     */
-    public final ArrayList<Item> listItems(){
-        return items;
-    }
-
-    /**
-     * 
-     * @param newName New room name
-     * @return Item object with specified name
-     */
-    public final Item findItem(String newName){
-      return itemsName.get(newName);
-    }
-
-    /**
-     * 
-     * @param newName Item name
-     * @return Whether or not the room contains this item
-     */
-    public final boolean containsItem(String newName){
-      return itemsName.containsKey(newName);
-    }
-
-    /**
-     * 
-     * @param item
-     */
-    public final void addItem(Item item){
-        items.add(item);
-        itemsName.put(item.getName(), item);
-    }
-
-    /**
-     * 
-     * @return Room name
-     */
-    public final String getName(){
-        return this.name;
-    }
-
-    /**
-     * 
-     * @param newName
-     */
-    public final void setName(String newName){
-        this.name=newName;
-    }
-
-    /**
-     * 
-     * @return Room long description
-     */
-    public final String getLongDescription(){
-        return this.longDescription;
-    }
-
-    /**
-    * @param newDescription Description for room
-    */
-    public final void setLongDescription(String newDescription){
-        this.longDescription=newDescription;
-    }
-
-    /**
-     * 
-     * @return Room short description
-     */
-    public final String getShortDescription(){
-        return this.shortDescription;
-    }
-
-    /**
-     * 
-     * @param newDescription
-     */
-    public final void setShortDescription(String newDescription){
-        this.shortDescription=newDescription;
-    }
-
-    /**
-     * 
-     * @param dir
-     * @return Room id connected in specified direction
-     */
-    public final Room getConnectedRoom(String dir) {
-        return connectedRooms.get(dir);
-    }
-
-    /**
-     * 
-     * @return Hashmap of connected IDs
-     */
-    public final HashMap<String,String> getConnectedRoomsList(){
-        return connections;
-    }
-
-    /**
-     * 
-     * @param dir
-     * @return Whether or not there is a connected room in that direction
-     */
-    public final boolean hasConnection(String dir){
-      return connections.containsKey(dir);
-    }
-
-    /**
-     * Adds a connected room ID
-     * @param connectionDir
-     * @param connectionID
-     */
-    public final void setConnectedRoomAsID(String connectionDir, String connectionID){
-        connections.put(connectionDir,connectionID);
-    }
-
-    public final void setConnectedRoomAsRoom(String connectionDir, Room room){
-        connectedRooms.put(connectionDir,room);
-    }
-
-    /**
-     * 
-     * @param newID Room ID
-     */
-    public final void setID(String newID){
-        ID=newID;
-    }
-
-    /**
-     * 
+     * Returns room ID
      * @return Room ID
      */
     public final String getID(){
@@ -227,10 +163,99 @@ public class Room implements java.io.Serializable{
 
     /**
      * 
+     * @return Room name
+     */
+    public final String getName(){
+        return name;
+    }
+
+    /**
+     * 
+     * @return Room long description
+     */
+    public final String getLongDescription(){
+        return longDescription;
+    }
+
+    /**
+     * 
+     * @return Room short description
+     */
+    public final String getShortDescription(){
+        return shortDescription;
+    }
+
+    /**
+     * 
+     * @param dir
+     * @return Room id connected in specified direction
+     */
+    public final Room getConnectedRoom(String dir) {
+        return connectedMapRooms.get(dir);
+    }
+
+    /**
+     * 
+     * @return Hashmap of connected IDs
+     */
+    public final HashMap<String,String> getConnectedRoomsList(){
+        return connectedMapID;
+    }
+
+    /**
+     * Gets list of items
+     * @return Arraylist of items contained in room
+     */
+    public final ArrayList<Item> listItems(){
+        return items;
+    }
+
+    /*Specific Mutators */
+
+    /**
+     * 
+     * @param item
+     */
+    public final void addItem(Item item){
+        items.add(item);
+        itemsMapName.put(item.getName(), item);
+    }
+
+    /**
+     * Removes item object from room
      * @param item
      */
     public final void removeItem(Item item){
       items.remove(item);
-      itemsName.remove(item.getName());
+      itemsMapName.remove(item.getName());
     }
+
+    /*Specific Getters */
+    
+    /**
+     * Searches for an item object based on name
+     * @param newName New room name
+     * @return Item object with specified name
+     */
+    public final Item findItem(String newName){
+        return itemsMapName.get(newName);
+      }
+  
+      /**
+       * 
+       * @param newName Item name
+       * @return Whether or not the room contains this item
+       */
+      public final boolean containsItem(String newName){
+        return itemsMapName.containsKey(newName);
+      }
+  
+      /**
+       * 
+       * @param dir
+       * @return Whether or not there is a connected room in that direction
+       */
+      public final boolean hasConnection(String dir){
+        return connectedMapID.containsKey(dir);
+      }
 }

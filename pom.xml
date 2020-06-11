@@ -18,7 +18,7 @@ to run your executable jar: java -jar <pathtoexecutablejarwithdependencies> <fla
 
     <modelVersion>4.0.0</modelVersion> <!--Maven version number (set to 4.0.0)-->
     <groupId>org.example</groupId> <!--ID for the group this project is part of-->
-    <artifactId>2430_A2</artifactId> <!--ID for the project itself-->
+    <artifactId>2430_A3</artifactId> <!--ID for the project itself-->
     <version>1.0</version> <!--project version number-->
 
     <!--"properties" is where you assign additional properties to the project-->

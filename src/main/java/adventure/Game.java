@@ -33,7 +33,7 @@ public class Game implements java.io.Serializable{
 
   /**
    * Main method
-   * @param args Command line arguements
+   * @param args Command line arguments
    */
     public static void main(String[] args){
         Game game = new Game(args);
@@ -69,7 +69,7 @@ public class Game implements java.io.Serializable{
   }
 
   /**
-   * Setter method for adventure because autograder is a whiny baby
+   * Setter method for adventure because auto grader is a whiny baby
    * @param adv
    */
   public final void setAdventure(Adventure adv){
@@ -240,13 +240,10 @@ public class Game implements java.io.Serializable{
   * @param fileName Name of output file
   */
   public void save(String fileName){
-    try{
-      FileOutputStream fileStream = new FileOutputStream(fileName);
-      ObjectOutputStream objectStream = new ObjectOutputStream(fileStream);
+    try(ObjectOutputStream objectStream = new ObjectOutputStream(new FileOutputStream(fileName));){
 
       objectStream.writeObject(adventure);
 
-      fileStream.close();
       objectStream.close();
     }catch(Exception e){
       System.out.println("Error - Could not save game to file");
