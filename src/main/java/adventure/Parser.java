@@ -32,16 +32,19 @@ public class Parser{
   */
   public final Command parseUserCommand(String input) throws InvalidCommandException{ /*TODO Validate noun here*/
     String[] split = input.split(" ",2);
-    String action;
-    String noun;
     if (split.length==1){
-      action = split[0];
-      return new Command(action);
+      validateSingleWordCommand(split[0]);
+      return new Command(split[0]);
     }else if(split.length==2){
-      action = split[0];
-      noun = split[1];
-      return new Command(action,noun);
+      validateNoun(split[0],split[1]);
+      return new Command(split[0],split[1]);
     }else{
+      throw new InvalidCommandException();
+    }
+  }
+
+  private void validateSingleWordCommand(String action) throws InvalidCommandException{
+    if (!action.equals("look") && !action.equals("inventory") && !action.equals("help")){
       throw new InvalidCommandException();
     }
   }
@@ -49,44 +52,33 @@ public class Parser{
   /**
   *  @return A list containing all valid action words
   */
-  public final String allCommands(){
-    return Command.getValidActions().toString();
+  public static final String allCommands(){
+    return Command.ACTIONS.toString();
   }
 
   /**
    * Method used to validate the noun of a command
-   * @param cmd Command object with validated action
+   * @param action Action word
+   * @param noun Noun word
    */
-  public final void validNoun(Command cmd) throws InvalidCommandException{
-    /*Guaranteed to have valid action
-    * Actions that need nouns validated
-    * go
-    * look
-    * eat
-    * read
-    * wear
-    * toss
-    * drop
-    * take
-    * */
-    String action = cmd.getActionWord();
-    String noun = cmd.getNoun();
+  private void validateNoun(String action, String noun) throws InvalidCommandException{
     if (action.equals("go")){
-      validateConnection(cmd.getNoun(),adventure);
-    }else if(action.equals("take") && cmd.hasSecondWord()) {
-      validateRoomItem(cmd.getNoun(), adventure);
-    }else if(action.equals("look") && cmd.hasSecondWord()){
-      validateLook(cmd.getNoun(),adventure);
+      validateGo(noun);
+    }else if(action.equals("take")) {
+      validateRoomItem(noun);
+    }else if(action.equals("look")){
+      validateLook(noun);
     }else if (action.equals("eat") || action.equals("wear") || action.equals("read") || action.equals("toss")){
-      validateInventoryItem(cmd.getNoun(), adventure);
+      validateUse(action, noun);
     }else{
       throw new InvalidCommandException();
     }
   }
 
-  public final void validateLook(String item, Adventure adv) throws InvalidCommandException{
+  public final void validateLook(String item) throws InvalidCommandException{
     Player player=adventure.getPlayer();
-    if (!adv.getCurrentRoom().containsItem(item) && !player.hasItem(item)){
+    Room room = adventure.getCurrentRoom();
+    if (!room.containsItem(item) && !player.hasItem(item)){
       throw new InvalidCommandException();
     }
   }
@@ -94,11 +86,10 @@ public class Parser{
   /**
    * Checks if there is a connected room in given direction
    * @param dir Direction letter
-   * @param adv Adventure object
    * @throws InvalidCommandException Invalid command
    */
-  public void validateConnection(String dir, Adventure adv) throws InvalidCommandException{
-    if (!adv.getCurrentRoom().hasConnection(dir)){
+  public void validateGo(String dir) throws InvalidCommandException{
+    if (!adventure.getCurrentRoom().hasConnection(dir)){
       throw new InvalidCommandException();
     }
   }
@@ -106,11 +97,41 @@ public class Parser{
   /**
    * Checks if item is within inventory
    * @param item Item name
-   * @param adv Adventure obj
+   * @param action Action word
    * @throws InvalidCommandException Invalid command
    */
-  public void validateInventoryItem(String item, Adventure adv) throws InvalidCommandException{
-    if(!adv.getPlayer().hasItem(item)){
+  public void validateUse(String action, String item) throws InvalidCommandException{
+    boolean has = adventure.getPlayer().hasItem(item);
+    if(!has){
+      throw new InvalidCommandException();
+    }
+    Item i = adventure.getPlayer().findItem(item);
+    validateEat(action, i); //no space for large if statement (:
+    validateWear(action, i);
+    validateToss(action, i);
+    validateRead(action, i);
+  }
+
+  private void validateToss(String action, Item item) throws InvalidCommandException{
+    if (action.equals("toss") && !(item instanceof Weapon) && !(item instanceof SmallFood)){
+      throw new InvalidCommandException();
+    }
+  }
+
+  private void validateRead(String action, Item item) throws InvalidCommandException{
+    if (action.equals("read") && !(item instanceof Spell) && !(item instanceof BrandedClothing)){
+      throw new InvalidCommandException();
+    }
+  }
+
+  private void validateWear(String action, Item item) throws InvalidCommandException{
+    if (action.equals("wear") && !(item instanceof Clothing)){
+      throw new InvalidCommandException();
+    }
+  }
+
+  private void validateEat(String action, Item item) throws InvalidCommandException{
+    if (action.equals("eat") && !(item instanceof Food) && !(item instanceof SmallFood)){
       throw new InvalidCommandException();
     }
   }
@@ -118,11 +139,10 @@ public class Parser{
   /**
    * Checks if item name is within room
    * @param item Item name
-   * @param adv Adventure object
    * @throws InvalidCommandException Invalid command
    */
-  public void validateRoomItem(String item, Adventure adv) throws InvalidCommandException{
-    if(!adv.getCurrentRoom().containsItem(item)){
+  public void validateRoomItem(String item) throws InvalidCommandException{
+    if(!adventure.getCurrentRoom().containsItem(item)){
       throw new InvalidCommandException();
     }
   }

@@ -56,6 +56,9 @@
           {
             "id": 1
           },
+          {
+            "id": 9
+          }
         ]
       },
       {
@@ -121,17 +124,21 @@
       {
         "id": 3,
         "name": "long stick",
-        "desc": "A curiously smooth stick. One end feels sticky?"
+        "desc": "A curiously smooth stick. One end feels sticky?",
+        "tossable": true
       },
       {
         "id": 4,
         "name": "report card",
-        "desc": "The student this belongs to must be really mega intelligent"
+        "desc": "The student this belongs to must be really mega intelligent",
+        "readable": true
       },
       {
         "id": 5,
         "name": "pill",
-        "desc": "Looks tough to swallow. Labeled, 'expected CIS2750 workload'"
+        "desc": "Looks tough to swallow. Labeled, 'expected CIS2750 workload'",
+        "edible": true,
+        "tossable": true
       },
       {
         "id": 6,
@@ -146,7 +153,8 @@
       {
         "id": 8,
         "name": "drugs",
-        "desc": "12 week course packed into 6? An essential."
+        "desc": "12 week course packed into 6? An essential.",
+        "edible": true
       },
       {
         "id": 9,

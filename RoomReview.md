@@ -2,4 +2,5 @@
 |-----------------------------------------|-----------------------------------|--------------------|-------------------------------------------------------------------------|--------------------------------|-------|
 | Room()                                  | initialize                        |                    | setItems() setConnectedMapID() setConnectedMapRooms() setItemsMapName() | Adventure JSONObject JSONArray | ?     |
 | Room(Adventure adv, JSONObject objRoom) | Convert JSONObject to Room object |                    |                                                                         |                                |       |
-|                                         |                                   |                    |                                                                         |                                |       |
+| setName()                                        |                                   |                    |                                                                         |                                |       |
+| getName()

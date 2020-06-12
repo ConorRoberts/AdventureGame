@@ -60,7 +60,7 @@ public class Adventure implements java.io.Serializable{
 
   /**
    * Adds items to Adventure's list of items
-   * Yeah this method is long but who really cares about 12 lines lmao
+   * Yeah this method is long but who really cares about 12 lines
    * @param objItems JSONArray of items
    */
   private void parseItems(JSONArray objItems){
@@ -69,8 +69,6 @@ public class Adventure implements java.io.Serializable{
       String name=i.get("name").toString();
       String id = i.get("id").toString();
       String desc = i.get("desc").toString();
-
-      addItem(new Item(name,id,desc));
 
       if (isTypeDoubleString(i,"wearable","readable")){
         addItem(new BrandedClothing(name, id, desc));
@@ -212,4 +210,175 @@ public class Adventure implements java.io.Serializable{
     return roomsMapID.get(id);
   }
 
+  /**
+   *
+   * @param cmd Command object
+   * @return Command output as string
+   */
+  public final String executeCommand(Command cmd){
+    if (cmd.getActionWord().equals("go")){
+      return commandGo(cmd);
+    }else if(cmd.getActionWord().equals("look")){
+      return commandLook(cmd);
+    }else if(cmd.getActionWord().equals("inventory")){
+      return commandInventory();
+    }else if(cmd.getActionWord().equals("take")){
+      return commandTake(cmd);
+    }else if(cmd.getActionWord().equals("help")){
+      return commandHelp();
+    }else if(cmd.getActionWord().equals("toss")){
+      return commandToss(cmd);
+    }else if(cmd.getActionWord().equals("read")){
+      return commandRead(cmd);
+    }else if(cmd.getActionWord().equals("eat")){
+      return commandEat(cmd);
+    }else if(cmd.getActionWord().equals("wear")){
+      return commandWear(cmd);
+    }else{
+      return null;
+    }
+  }
+
+  private String commandRead(Command cmd){
+    Item item = player.findItem(cmd.getNoun());
+    if (item instanceof Spell){
+      Spell i = (Spell) item;
+      return (i.read());
+    }else if(item instanceof BrandedClothing) {
+      BrandedClothing i = (BrandedClothing) item;
+      return (i.read());
+    }else{
+      return null;
+    }
+  }
+
+  private String commandEat(Command cmd){
+    Item item = player.findItem(cmd.getNoun());
+    if (item instanceof Food){
+      Food i = (Food) item;
+      player.eat(i);
+      return (i.eat());
+    }else{
+      return null;
+    }
+  }
+
+  private String commandWear(Command cmd){
+    Item item = player.findItem(cmd.getNoun());
+    if (item instanceof Clothing){
+      Clothing i = (Clothing) item;
+      player.wear(i);
+      return (i.wear());
+    }else{
+      return null;
+    }
+  }
+
+  /**
+   * Operation for "inventory" command
+   * @return Formatted string for inventory
+   */
+  private String commandInventory(){
+    if (player.getInventory().isEmpty()){
+      return ("--Inventory is empty--");
+    }else{
+      StringBuilder str = new StringBuilder("--"+player.getName()+"'s Inventory--");
+      for (Item i : getPlayer().getInventory()){
+        str.append("\n\t");
+        str.append(i.getName());
+        if(i instanceof Clothing){
+          str.append(" (wearing)");
+        }
+      }
+      return str.toString();
+    }
+  }
+
+  /**
+   * Prints items in room
+   * @return Formatted string with room items
+   */
+  public String listRoomItems(){
+    if (getCurrentRoom().listItems().isEmpty()) {
+      return ("-- This room contains no items --");
+    }else {
+      StringBuilder str = new StringBuilder("--Items contained here--");
+      for (Item i : getCurrentRoom().listItems()){
+        str.append("\n\t");
+        str.append(i.getName());
+      }
+      return str.toString();
+    }
+  }
+
+  /**
+   * Command for take
+   * @param cmd Command object
+   * @return String take
+   */
+  private String commandTake(Command cmd){
+    Item i = getCurrentRoom().findItem(cmd.getNoun());
+    player.take(i);
+    return ("Taking "+i.getName());
+  }
+
+  /**
+   * Operation for "toss" command
+   * @param cmd Command object
+   * @return String toss
+   */
+  private String commandToss(Command cmd){
+    Item item = player.findItem(cmd.getNoun());
+    if (item instanceof Weapon){
+      Weapon i = (Weapon) item;
+      player.toss(i);
+      return (i.toss());
+    }else if(item instanceof SmallFood) {
+      SmallFood i = (SmallFood) item;
+      player.toss(i);
+      return (i.toss());
+    }else{
+      return null;
+    }
+  }
+
+  private String commandHelp(){
+    return "--Help Menu--"
+            +"\ntake <item name>: Transfer item into player's inventory"
+            +"\nlook: See current room description"
+            +"\nlook <item name>: See item description"
+            +"\ngo <N/E/S/W>: Move in the specified direction"
+            +"\ntoss, wear, read, eat: Various uses depending on the item.";
+  }
+
+  /**
+   * Operation for "look" command
+   * Allows user to look at room/inventory items
+   * @param cmd Command object
+   * @return String look
+   */
+  private String commandLook(Command cmd){
+    if (cmd.hasSecondWord()) {
+      return (getCurrentRoom().findItem(cmd.getNoun()).toString());
+    }else if (cmd.hasSecondWord() && player.hasItem(cmd.getNoun())) {
+      return (player.findItem(cmd.getNoun()).toString());
+    }else if(!cmd.hasSecondWord()){
+      System.out.println("here");
+      return (getCurrentRoomDescription());
+    }else{
+      return null;
+    }
+  }
+
+  /**
+   * Operation for "go" command
+   * @param cmd Command object
+   * @return String go
+   */
+  private String commandGo(Command cmd){
+    Room newRoom=getCurrentRoom().getConnectedRoom(cmd.getNoun());
+    player.setCurrentRoom(newRoom);
+    return ("You have moved to "+newRoom.getName());
+  }
 }
+

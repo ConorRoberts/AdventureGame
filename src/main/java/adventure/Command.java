@@ -1,21 +1,31 @@
 package adventure;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Arrays;
 
 public class Command {
-    private static final List<String> validActions = Arrays.asList("go", "look", "quit","take","inventory","help","drop", "eat", "wear", "toss", "read");
-    private static final List<String> validDirections = Arrays.asList("up","down","N","E","S","W");
+    public static final List<String> DIRECTIONS = new ArrayList<>(){{
+        add("up");
+        add("down");
+        add("N");
+        add("E");
+        add("S");
+        add("W");
+    }};
+    public static final List<String> ACTIONS = new ArrayList<>(){{
+        add("go");
+        add("look");
+        add("quit");
+        add("take");
+        add("inventory");
+        add("help");
+        add("eat");
+        add("wear");
+        add("toss");
+        add("read");
+    }};
     private String action;
     private String noun;
-
-    public static List<String> getValidActions(){
-      return validActions;
-    }
-
-    public static List<String> getValidDirections(){
-      return validDirections;
-    }
 
     @Override
     public final String toString(){
@@ -54,7 +64,7 @@ public class Command {
         //TODO validate the command here and ensure that the noun provided
         // is a legitimate second word for the command
         // throw an exception if not
-        if (validActions.contains(command)){
+        if (ACTIONS.contains(command)){
           setAction(command);
           setNoun(what);
         }else{

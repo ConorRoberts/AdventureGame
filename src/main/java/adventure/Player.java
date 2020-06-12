@@ -78,14 +78,26 @@ public class Player implements java.io.Serializable{
     currentRoom.removeItem(item);
   }
 
+  public final void removeItem(Item item){
+    inventory.remove(item);
+    itemsMap.remove(item.getName());
+  }
+
   /**
    * 
    * @param item
    */
-  public final void drop(Item item){
+  public final void toss(Item item){
     currentRoom.addItem(item);
-    inventory.remove(item);
-    itemsMap.remove(item.getName());
+    removeItem(item);
+  }
+
+  public final void wear(Clothing item){
+    item.setWearing(true);
+  }
+
+  public final void eat(Item item){
+    removeItem(item);
   }
 
   /**

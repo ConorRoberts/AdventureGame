@@ -1,6 +1,6 @@
 package adventure;
 
-public class BrandedClothing extends Clothing{
+public class BrandedClothing extends Clothing implements Readable{
     public BrandedClothing(String newName, String newID, String newDesc){
         super(newName, newID, newDesc);
     }

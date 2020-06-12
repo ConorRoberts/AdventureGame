@@ -1,6 +1,6 @@
 package adventure;
 
-public class Spell extends Item {
+public class Spell extends Item implements Readable{
     public Spell(String newName, String newID, String newDesc){
         super(newName, newID, newDesc);
     }
