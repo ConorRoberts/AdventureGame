@@ -2,11 +2,11 @@ package adventure;
 
 public class Weapon extends Item implements Tossable{
 
-    public Weapon(Item item){
-
+    public Weapon(String newName, String newID, String newDesc){
+        super(newName, newID, newDesc);
     }
 
-    public String toss(){
-        return null;
+    public final String toss(){
+        return ("You have thrown "+getName());
     }
 }

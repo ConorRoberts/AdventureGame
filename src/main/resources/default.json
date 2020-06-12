@@ -110,7 +110,8 @@
       {
         "id": 1,
         "name": "ball",
-        "desc": "a cool litle green ball"
+        "desc": "a cool litle green ball",
+        "tossable":true
       },
       {
         "id": 2,
@@ -146,6 +147,13 @@
         "id": 8,
         "name": "drugs",
         "desc": "12 week course packed into 6? An essential."
+      },
+      {
+        "id": 9,
+        "name": "branded hat",
+        "desc": "This hat has a really fat fish on it.",
+        "readable":true,
+        "wearable":true
       }
     ]
   }

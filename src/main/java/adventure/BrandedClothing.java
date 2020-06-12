@@ -1,11 +1,10 @@
 package adventure;
 
 public class BrandedClothing extends Clothing{
-    public String wear(){
-        return null;
+    public BrandedClothing(String newName, String newID, String newDesc){
+        super(newName, newID, newDesc);
     }
-
-    public String read(){
-        return null;
+    public final String read(){
+        return ("You have read "+getName());
     }
 }

@@ -30,9 +30,7 @@ public class Adventure implements java.io.Serializable{
   public Adventure(JSONObject objAdventure){
     this();
     parseItems((JSONArray) objAdventure.get("item"));
-    System.out.println("two");
     parseRooms((JSONArray) objAdventure.get("room"));
-
     parseConnectionsAsRoom();
 
     getPlayer().setCurrentRoom(listAllRooms().get(0));
@@ -62,18 +60,48 @@ public class Adventure implements java.io.Serializable{
 
   /**
    * Adds items to Adventure's list of items
+   * Yeah this method is long but who really cares about 12 lines lmao
    * @param objItems JSONArray of items
    */
   private void parseItems(JSONArray objItems){
-    for (Object objCurrent : objItems){
-      JSONObject i = (JSONObject) objCurrent;
-
+    for (Object obj : objItems){
+      JSONObject i = (JSONObject) obj;
       String name=i.get("name").toString();
       String id = i.get("id").toString();
       String desc = i.get("desc").toString();
 
-      this.addItem(new Item(name,id,desc));
+      addItem(new Item(name,id,desc));
+
+      if (isTypeDoubleString(i,"wearable","readable")){
+        addItem(new BrandedClothing(name, id, desc));
+      }else if (isTypeDoubleString(i,"edible","tossable")){
+        addItem(new SmallFood(name,id,desc));
+      }else if (isTypeSingleString(i,"edible")){
+        addItem(new Food(name,id,desc));
+      }else if (isTypeSingleString(i,"tossable")){
+        addItem(new Weapon(name,id,desc));
+      }else if (isTypeSingleString(i,"wearable")){
+        addItem(new Clothing(name,id,desc));
+      }else if (isTypeSingleString(i,"readable")){
+        addItem(new Spell(name,id,desc));
+      }else{
+        addItem(new Item(name,id,desc));
+      }
     }
+  }
+
+  private boolean isTypeSingleString(JSONObject i, String one){
+    if (i.containsKey(one)){
+      return i.get(one).equals(true);
+    }
+    return false;
+  }
+
+  private boolean isTypeDoubleString(JSONObject i, String one, String two){
+    if (i.containsKey(one) && i.containsKey(two)){
+      return i.get(one).equals(true) && i.get(two).equals(true);
+    }
+    return false;
   }
 
   public final void setItemsMapName(HashMap<String,Item> newMap){
