@@ -43,7 +43,7 @@ public class AdventureView extends JFrame{
     }
 
     private void roomWelcome(){
-        gameOutput.append("Room: "+game.getAdventure().getCurrentRoom().toString()+"\n"+game.getAdventure().listRoomItems()+"\n");
+        gameOutput.append("Room: "+game.getAdventure().getCurrentRoom().toString()+"\n");
         gameOutput.append(game.getAdventure().listRoomItems()+"\n");
     }
 
@@ -71,6 +71,7 @@ public class AdventureView extends JFrame{
             gameOutput.append("Usage Error - Type 'help' for a list of commands.");
         }
         gameOutput.append("\n");
+        roomWelcome();
     }
 
     private void setUpSize(){
