@@ -26,7 +26,6 @@ public class Game implements java.io.Serializable{
   public Game(String[] flags){
     this();
     startup(flags);
-    setParser(new Parser(adventure));
   }
 
 /**
@@ -39,13 +38,20 @@ public class Game implements java.io.Serializable{
       do{
         System.out.println("Room: "+game.adventure.getCurrentRoom().toString());
         System.out.println(game.adventure.listRoomItems());
-        //adventure.printRoomItems(game.adventure.getCurrentRoom());
         System.out.print("Command: ");
         userInput = game.getInput();
         game.handleCommand(game, userInput);
       }while(!userInput.equals("quit"));
 
       game.handleSave(game);
+  }
+
+  public final Adventure getAdventure(){
+    return adventure;
+  }
+
+  public final Parser getParser(){
+    return parser;
   }
 
   private String getInput(){
@@ -82,7 +88,7 @@ public class Game implements java.io.Serializable{
     adventure=adv;
   }
 
-  private void handleSave(Game game){
+  public final void handleSave(Game game){
     System.out.print("Would you like to save (Y/N)? ");
     String input=getInput();
     if (input.equals("Y")){
@@ -97,7 +103,7 @@ public class Game implements java.io.Serializable{
    * Starts the whole game
    * @param args Command line arguments
    */
-  private void startup(String[] args){
+  public final void startup(String[] args){
     InputStream inputStream;
     if (args.length==2) {
         handleFlags(args);
@@ -105,6 +111,7 @@ public class Game implements java.io.Serializable{
       inputStream=Game.class.getClassLoader().getResourceAsStream("default.json");
       setAdventure(generateAdventure(loadAdventureJson(inputStream)));
     }
+    setParser(new Parser(adventure));
     printWelcome(adventure);
   }
 

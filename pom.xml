@@ -61,7 +61,7 @@ to run your executable jar: java -jar <pathtoexecutablejarwithdependencies> <fla
                 </executions>
 
                 <configuration> <!--tell the plugin which class to run -->
-                    <mainClass>adventure.Game</mainClass>
+                    <mainClass>adventure.AdventureView</mainClass>
                 </configuration>
 
             </plugin>
@@ -89,7 +89,7 @@ to run your executable jar: java -jar <pathtoexecutablejarwithdependencies> <fla
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>adventure.Game</mainClass>
+                            <mainClass>adventure.AdventureView</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
