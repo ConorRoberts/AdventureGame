@@ -381,7 +381,6 @@ public class Adventure implements java.io.Serializable{
     }else if (cmd.hasSecondWord() && player.hasItem(cmd.getNoun())) {
       return (player.findItem(cmd.getNoun()).toString());
     }else if(!cmd.hasSecondWord()){
-      System.out.println("here");
       return (getCurrentRoomDescription());
     }else{
       return null;
