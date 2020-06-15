@@ -1,41 +1,73 @@
 package adventure;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.TextArea;
+import java.awt.TextField;
+import java.io.File;
 import java.io.InputStream;
 
 public class AdventureView extends JFrame{
     public static final int WIDTH = 600;
-    public static final int HEIGHT = 500;
-    private Game game;
+    public static final int HEIGHT = 700;
+    public static final int OUTPUT_WIDTH=50;
+    public static final int OUTPUT_HEIGHT=20;
+    public static final int INVENTORY_WIDTH=40;
+    public static final int INVENTORY_HEIGHT=20;
+    private final Game game;
     private Container contentPane;
     private TextArea gameOutput;
     private TextField gameInput;
+    private TextArea gameInventory;
 
     public AdventureView(Game g){
         super();
         game = g;
-        setUpSize();
         setMainContainer();
 
-        JPanel panel = new JPanel();
-        gameInput = new TextField("Welcome to Adventure!");
-        gameOutput=new TextArea();
-        contentPane.add(gameInput);
-        contentPane.add(gameOutput);
-        JButton actionButton = new JButton("Submit");
-        actionButton.addActionListener(listen->gameAction(gameInput.getText()));
-        contentPane.add(actionButton);
-
-        JButton gameButton = new JButton("Get the game");
-        gameButton.addActionListener(listen->startTheGame());
-        contentPane.add(gameButton);
+        startTheGame();
 
         pack();
     }
 
+    private TextField createInputArea(){
+       return new TextField("");
+    }
+
+    private JButton createLoadButton(){
+        JButton gameButton = new JButton("Load Adventure");
+        gameButton.addActionListener(listen->loadAdventureButton());
+        return gameButton;
+    }
+
+    private JButton createCommandButton(){
+        JButton button = new JButton("Submit");
+        button.setBackground(Color.BLUE);
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.addActionListener(listen->gameAction(gameInput.getText()));
+        return button;
+    }
+
+    private TextArea createOutputArea(){
+        return new TextArea("",OUTPUT_HEIGHT,OUTPUT_WIDTH,TextArea.SCROLLBARS_NONE);
+    }
+
+    private void showInventory() {
+        gameInventory.setText(game.getAdventure().commandInventory());
+    }
+
     private void startTheGame(){
-        //set game.adventure
         InputStream inputStream=Game.class.getClassLoader().getResourceAsStream("default.json");
         game.setAdventure(game.generateAdventure(game.loadAdventureJson(inputStream)));
         game.setParser(new Parser(game.getAdventure()));
@@ -45,23 +77,75 @@ public class AdventureView extends JFrame{
     private void roomWelcome(){
         gameOutput.append("Room: "+game.getAdventure().getCurrentRoom().toString()+"\n");
         gameOutput.append(game.getAdventure().listRoomItems()+"\n");
+        showInventory();
+    }
+
+    private JMenuBar createDropdown(){
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu = new JMenu("Menu");
+        menuBar.add(menu);
+        JMenuItem one = new JMenuItem("Save");
+        menu.add(one);
+        one.addActionListener(listen->game.getAdventure().save("AdventureSave.ser"));
+        JMenuItem two = new JMenuItem("Load");
+        menu.add(two);
+        two.addActionListener(listen->loadAdventureButton());
+        JMenuItem three = new JMenuItem("Change Player Name");
+        menu.add(three);
+
+        return menuBar;
     }
 
     private void setMainContainer(){
+        setUpSize();
+        gameInventory=new TextArea("",INVENTORY_HEIGHT,INVENTORY_WIDTH,TextArea.SCROLLBARS_NONE);
+        GridBagConstraints c = new GridBagConstraints();
         contentPane = getContentPane();
-        contentPane.setLayout(new FlowLayout());
+        contentPane.setLayout(new GridBagLayout());
+        gameInput = createInputArea();
+        gameOutput= createOutputArea();
+        gameInventory.setEditable(false);
+
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new BoxLayout(inputPanel,BoxLayout.LINE_AXIS));
+
+        c.fill=GridBagConstraints.HORIZONTAL;
+
+        //Dropdown menu
+        c.gridx=0;
+        c.gridy=0;
+        contentPane.add(createDropdown(),c);
+
+        //Game output window
+        c.gridx=0;
+        c.gridy=1;
+        contentPane.add(gameOutput,c);
+
+        //Inventory window
+        c.gridx=1;
+        c.gridy=1;
+        contentPane.add(gameInventory,c);
+
+        //input panel
+        inputPanel.add(createCommandButton(),c);
+        inputPanel.add(gameInput,c);
+
+        c.gridx=0;
+        c.gridy=2;
+        contentPane.add(inputPanel,c);
+
     }
 
-    /*private JButton createButton(String text){
-        JButton button = new JButton("Enter Command");
-        button.setBackground(new Color(24, 105, 66));
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-        button.setFont(new Font("Tahoma", Font.BOLD, 12));
-        String cmdText = gameInput.getText();
-        button.addActionListener(listen->handleCommand(cmdText));
-        return button;
-    }*/
+    private void loadAdventureButton(){
+        JFileChooser fc = new JFileChooser();
+        int result = fc.showOpenDialog(this);
+        if (result==JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fc.getSelectedFile();
+            game.setAdventure(game.generateAdventure(game.loadAdventureJson(selectedFile.getAbsolutePath())));
+        }
+        gameOutput.append("Loaded new adventure\n");
+        roomWelcome();
+    }
 
     private void gameAction(String str){
         try{
@@ -72,6 +156,7 @@ public class AdventureView extends JFrame{
         }
         gameOutput.append("\n");
         roomWelcome();
+        gameInput.setText("");
     }
 
     private void setUpSize(){

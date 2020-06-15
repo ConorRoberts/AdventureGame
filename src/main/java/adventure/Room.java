@@ -30,7 +30,7 @@ public class Room implements java.io.Serializable{
     /*Constructors */
 
     public Room(){
-        setItems(new ArrayList<Item>());
+        setItems(new ArrayList<>());
         setConnectedMapID();
         setConnectedMapRooms();
         setItemsMapName();
@@ -55,7 +55,7 @@ public class Room implements java.io.Serializable{
 
     /**
      * 
-     * @param newName
+     * @param newName New Room name
      */
     public final void setName(String newName){
         this.name=newName;
@@ -144,7 +144,9 @@ public class Room implements java.io.Serializable{
         if (objLoot!=null) {
             for (Object i : objLoot) {
                 JSONObject item = (JSONObject) i;
+
                 Item objItem = itemsMap.get(item.get("id").toString());
+
                 objItem.setContainingRoom(this);
                 addItem(objItem);
             }

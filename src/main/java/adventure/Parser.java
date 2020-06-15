@@ -52,7 +52,7 @@ public class Parser{
   /**
   *  @return A list containing all valid action words
   */
-  public static final String allCommands(){
+  public static String allCommands(){
     return Command.ACTIONS.toString();
   }
 
@@ -69,7 +69,7 @@ public class Parser{
     }else if(action.equals("look")){
       validateLook(noun);
     }else if (action.equals("eat") || action.equals("wear") || action.equals("read") || action.equals("toss")){
-      validateUse(action, noun);
+      validateInventoryItem(noun);
     }else{
       throw new InvalidCommandException();
     }
@@ -97,41 +97,10 @@ public class Parser{
   /**
    * Checks if item is within inventory
    * @param item Item name
-   * @param action Action word
    * @throws InvalidCommandException Invalid command
    */
-  public void validateUse(String action, String item) throws InvalidCommandException{
-    boolean has = adventure.getPlayer().hasItem(item);
-    if(!has){
-      throw new InvalidCommandException();
-    }
-    Item i = adventure.getPlayer().findItem(item);
-    validateEat(action, i); //no space for large if statement (:
-    validateWear(action, i);
-    validateToss(action, i);
-    validateRead(action, i);
-  }
-
-  private void validateToss(String action, Item item) throws InvalidCommandException{
-    if (action.equals("toss") && !(item instanceof Weapon) && !(item instanceof SmallFood)){
-      throw new InvalidCommandException();
-    }
-  }
-
-  private void validateRead(String action, Item item) throws InvalidCommandException{
-    if (action.equals("read") && !(item instanceof Spell) && !(item instanceof BrandedClothing)){
-      throw new InvalidCommandException();
-    }
-  }
-
-  private void validateWear(String action, Item item) throws InvalidCommandException{
-    if (action.equals("wear") && !(item instanceof Clothing)){
-      throw new InvalidCommandException();
-    }
-  }
-
-  private void validateEat(String action, Item item) throws InvalidCommandException{
-    if (action.equals("eat") && !(item instanceof Food) && !(item instanceof SmallFood)){
+  public void validateInventoryItem(String item) throws InvalidCommandException{
+    if(!adventure.getPlayer().hasItem(item)){
       throw new InvalidCommandException();
     }
   }

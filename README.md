@@ -14,7 +14,8 @@
     * run "mvn assembly:assembly"
 
 ### Running from the command line (without maven)
-* run "java -jar target/2430_A3-1.0-jar-with-dependencies.jar [-l/-a] [save/json]"
+* For GUI "java -jar target/2430_A3-1.0-jar-with-dependencies.jar [-l/-a] [save/json]"
+* For text "java -cp target/2430_A2-1.0-jar-with-dependencies.jar adventure.Game [-l/-a] [save/json]"
 * To load the **default** game, do not specify any additional arguments
 
 ### Instructions for using the program

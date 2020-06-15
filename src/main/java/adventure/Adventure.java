@@ -3,6 +3,8 @@ package adventure;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -239,6 +241,19 @@ public class Adventure implements java.io.Serializable{
     }
   }
 
+  /**
+   * Saves game state
+   * @param fileName Name of output file
+   */
+  public void save(String fileName){
+    try(ObjectOutputStream objectStream = new ObjectOutputStream(new FileOutputStream(fileName))){
+
+      objectStream.writeObject(this);
+
+    }catch(Exception ignored){
+    }
+  }
+
   private String commandRead(Command cmd){
     Item item = player.findItem(cmd.getNoun());
     if (item instanceof Spell){
@@ -248,7 +263,7 @@ public class Adventure implements java.io.Serializable{
       BrandedClothing i = (BrandedClothing) item;
       return (i.read());
     }else{
-      return null;
+      return "This cannot be read";
     }
   }
 
@@ -259,7 +274,7 @@ public class Adventure implements java.io.Serializable{
       player.eat(i);
       return (i.eat());
     }else{
-      return null;
+      return "This cannot be eaten";
     }
   }
 
@@ -270,7 +285,7 @@ public class Adventure implements java.io.Serializable{
       player.wear(i);
       return (i.wear());
     }else{
-      return null;
+      return "This cannot be worn";
     }
   }
 
@@ -278,16 +293,19 @@ public class Adventure implements java.io.Serializable{
    * Operation for "inventory" command
    * @return Formatted string for inventory
    */
-  private String commandInventory(){
+  public final String commandInventory(){
     if (player.getInventory().isEmpty()){
-      return ("--Inventory is empty--");
+      return ("--"+player.getName()+"'s Inventory is empty--");
     }else{
       StringBuilder str = new StringBuilder("--"+player.getName()+"'s Inventory--");
       for (Item i : getPlayer().getInventory()){
         str.append("\n\t");
         str.append(i.getName());
         if(i instanceof Clothing){
-          str.append(" (wearing)");
+          Clothing c = (Clothing) i;
+          if (c.getWearing()){
+            str.append(" (wearing)");
+          }
         }
       }
       return str.toString();
@@ -338,7 +356,7 @@ public class Adventure implements java.io.Serializable{
       player.toss(i);
       return (i.toss());
     }else{
-      return null;
+      return ("This cannot be tossed.");
     }
   }
 

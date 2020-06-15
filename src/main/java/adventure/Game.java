@@ -1,12 +1,10 @@
 package adventure;
 
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Scanner;
 
 import org.json.simple.JSONObject;
@@ -36,14 +34,29 @@ public class Game implements java.io.Serializable{
       Game game = new Game(args);
       String userInput;
       do{
-        System.out.println("Room: "+game.adventure.getCurrentRoom().toString());
-        System.out.println(game.adventure.listRoomItems());
+        game.roomWelcome();
         System.out.print("Command: ");
         userInput = game.getInput();
         game.handleCommand(game, userInput);
       }while(!userInput.equals("quit"));
 
       game.handleSave(game);
+  }
+
+  private void roomWelcome(){
+    System.out.println("Room: "+adventure.getCurrentRoom().toString());
+    System.out.println(adventure.listRoomItems());
+  }
+
+  private void handleSave(Game game){
+    System.out.print("Would you like to save (Y/N)? ");
+    String input=getInput();
+    if (input.equals("Y")){
+      System.out.print("Enter a file name: ");
+      input=getInput();
+      adventure.save(input);
+    }
+    game.scanner.close();
   }
 
   public final Adventure getAdventure(){
@@ -88,17 +101,6 @@ public class Game implements java.io.Serializable{
     adventure=adv;
   }
 
-  public final void handleSave(Game game){
-    System.out.print("Would you like to save (Y/N)? ");
-    String input=getInput();
-    if (input.equals("Y")){
-      System.out.print("Enter a file name: ");
-      input=getInput();
-      game.save(input);
-    }
-    game.scanner.close();
-  }
-
   /**
    * Starts the whole game
    * @param args Command line arguments
@@ -130,33 +132,6 @@ public class Game implements java.io.Serializable{
   }
 
   /**
-  * Saves game state
-  * @param fileName Name of output file
-  */
-  public void save(String fileName){
-    try(ObjectOutputStream objectStream = new ObjectOutputStream(new FileOutputStream(fileName))){
-
-      objectStream.writeObject(adventure);
-
-    }catch(Exception e){
-      System.out.println("Error - Could not save game to file");
-    }
-  }
-
-  /**
-   * Restore save game
-   * @param fileName Name of game save
-   */
-  public void restore(String fileName){
-    try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))){
-      setAdventure((Adventure) in.readObject());
-      adventure.getPlayer().setGameSaveName(fileName);
-    }catch(Exception e) {
-      System.out.println("Error - Could not open game save.");
-    }
-  } 
-
-  /**
   * Restores game state from file path
   * @param inputStream File to be loaded
   * @return JSONObject with details of the adventure
@@ -170,6 +145,19 @@ public class Game implements java.io.Serializable{
     }catch (Exception e){
       System.out.println("Error - Could not load adventure.json from stream");
       return null;
+    }
+  }
+
+  /**
+   * Restore save game
+   * @param fileName Name of game save
+   */
+  public void restore(String fileName){
+    try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))){
+      setAdventure((Adventure) in.readObject());
+      adventure.getPlayer().setGameSaveName(fileName);
+    }catch(Exception e) {
+      System.out.println("Error - Could not open game save.");
     }
   }
 
