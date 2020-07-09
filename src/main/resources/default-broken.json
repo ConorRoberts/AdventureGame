@@ -1,0 +1,168 @@
+{
+  "adventure": {
+    "room": [
+      {
+        "id": 100,
+        "name": "the living room",
+        "short_description": "Why go anywhere else? Just stop here :)",
+        "long_description": "A room with a few really cool couches, a carpet, and pictures of my really cool friend Geoff.",
+        "entrance": [
+          {
+            "id": 101,
+            "dir": "S"
+          },
+          {
+            "id": 103,
+            "dir": "down"
+          }
+        ]
+      },
+      {
+        "id": 101,
+        "name": "the kitchen",
+        "short_description": "kitchen with a stove.",
+        "long_description": "Somewhere people probably cook food. Who knows?",
+        "entrance": [
+          {
+            "id": 100,
+            "dir": "N"
+          },
+          {
+            "id": 102,
+            "dir": "W"
+          }
+        ],
+        "loot": [
+          {
+            "id": 2
+          },
+          {
+            "id": 8
+          }
+        ]
+      },
+      {
+        "id": 102,
+        "name": "the bathroom",
+        "short_description": "It's a bathroom",
+        "long_description": "There is a little toilet, a sink, and a shower with a really fantastic curtain",
+        "entrance": [
+          {
+            "id": 101,
+            "dir": "E"
+          }
+        ],
+        "loot": [
+          {
+            "id": 1
+          },
+          {
+            "id": 9
+          }
+        ]
+      },
+      {
+        "id": 103,
+        "name": "the very exciting room",
+        "short_description": "Epic room",
+        "long_description": "I'm really just trying to hit the room count",
+        "entrance": [
+          {
+            "id": 100,
+            "dir": "up"
+          },
+          {
+            "id": 104,
+            "dir": "S"
+          }
+        ],
+        "loot": [
+          {
+            "id": 3
+          },
+          {
+            "id": 4
+          }
+        ]
+      },
+      {
+        "id": 104,
+        "name": "the gamer room",
+        "short_description": "gamer gunk covers every wall",
+        "long_description": "Minimum room count is 5 right?",
+        "entrance": [
+          {
+            "id": 103,
+            "dir": "N"
+          }
+        ],
+        "loot": [
+          {
+            "id": 5
+          },
+          {
+            "id": 6
+          },
+          {
+            "id": 7
+          }
+        ]
+      }
+    ],
+    "item": [
+      {
+        "id": 1,
+        "name": "ball",
+        "desc": "a cool litle green ball",
+        "tossable":true
+      },
+      {
+        "id": 2,
+        "name": "cube",
+        "desc": "a really super cool red cube"
+      },
+      {
+        "id": 3,
+        "name": "long stick",
+        "desc": "A curiously smooth stick. One end feels sticky?",
+        "tossable": true
+      },
+      {
+        "id": 4,
+        "name": "report card",
+        "desc": "The student this belongs to must be really mega intelligent",
+        "readable": true
+      },
+      {
+        "id": 5,
+        "name": "pill",
+        "desc": "Looks tough to swallow. Labeled, 'expected CIS2750 workload'",
+        "edible": true,
+        "tossable": true
+      },
+      {
+        "id": 6,
+        "name": "bag of holding",
+        "desc": "Contains 'these nuts'"
+      },
+      {
+        "id": 7,
+        "name": "computer virus",
+        "desc": "respondus lockdown browser"
+      },
+      {
+        "id": 8,
+        "name": "drugs",
+        "desc": "12 week course packed into 6? An essential.",
+        "edible": true
+      },
+      {
+        "id": 9,
+        "name": "branded hat",
+        "desc": "This hat has a really fat fish on it.",
+        "readable":true,
+        "wearable":true
+      }
+    ]
+  }
+}
